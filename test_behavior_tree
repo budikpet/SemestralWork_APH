@@ -1,0 +1,33 @@
+// import { BehaviorTreeBuilder, BehaviorTreeStatus, TimeData } from 'ts-behavior-tree'
+
+// const node = new BehaviorTreeBuilder()
+// 		.Selector("root")
+// 			.Sequence('aa')
+// 				.Do('aa_first', () => {
+// 					console.log("aa_first")
+// 					return BehaviorTreeStatus.Success
+// 				})
+// 				.Do('aa_second', () => {
+// 					console.log("aa_second")
+// 					return BehaviorTreeStatus.Failure
+// 				})
+// 			.End()
+// 			.Selector("bb")
+// 				.Do('bb_first', () => {
+// 					console.log("bb_first")
+// 					return BehaviorTreeStatus.Success
+// 				})
+// 				.Do('bb_second', () => {
+// 					console.log("bb_second")
+// 					return BehaviorTreeStatus.Failure
+// 				})
+// 			.End()
+// 		.End()
+// 		.Build()
+		
+// 		console.log("Result: ", node.Tick(new TimeData()) === BehaviorTreeStatus.Success)
+
+// Rovno stromu
+	// 								(root)
+	// 				(aa)---							---(bb)
+	// (aa_first)---			---(aa_second)		(bb_first)---			---(bb_second)
