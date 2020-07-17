@@ -25,5 +25,6 @@ The map is randomly generated at the start of the game and its size is fixed. Pl
 Controls
 ______________
 
-:movement: W/A/S/D
-:shooting: J
+:Movement: W/A/S/D
+:Shooting: J
+:Super speed: Spacebar
