@@ -1,5 +1,6 @@
 /build
 /build_pre
+.DS_Store
 
 # Logs
 logs
