@@ -1,3 +1,8 @@
+#tmp
+/tmp_python/venv
+/tmp_python/.vscode
+
+# MacOS & project
 /build
 /build_pre
 .DS_Store
