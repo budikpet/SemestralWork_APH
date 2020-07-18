@@ -2,19 +2,19 @@
 import { Vector } from '../../libs/pixi-component';
 
 /**
- * Storage for aceleration and velocity
+ * Storage for acceleration and velocity
  */
 export default class Dynamics {
-	aceleration: Vector;
+	acceleration: Vector;
 	velocity: Vector;
 
-	constructor(velocity: Vector = new Vector(0, 0), aceleration: Vector = new Vector(0, 0)) {
+	constructor(velocity: Vector = new Vector(0, 0), acceleration: Vector = new Vector(0, 0)) {
 		this.velocity = velocity;
-		this.aceleration = aceleration;
+		this.acceleration = acceleration;
 	}
 
 	applyVelocity(delta: number, gameSpeed: number) {
-		this.velocity = this.velocity.add(this.aceleration.multiply(delta * 0.001 * gameSpeed));
+		this.velocity = this.velocity.add(this.acceleration.multiply(delta * 0.001 * gameSpeed));
 	}
 
 	calcPositionChange(delta: number, gameSpeed: number): Vector {

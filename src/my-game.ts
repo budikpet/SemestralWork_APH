@@ -1,4 +1,5 @@
 import * as ECSA from '../libs/pixi-component';
+import { Factory } from './factory';
 
 // TODO rename your game
 class MyGame {
@@ -29,15 +30,21 @@ class MyGame {
   }
 
   onAssetsLoaded() {
-    // init the scene and run your game
-    let scene = this.engine.scene;
-    new ECSA.Builder(scene)
-      .localPos(this.engine.app.screen.width / 2, this.engine.app.screen.height / 2)
-      .anchor(0.5)
-      .withParent(scene.stage)
-      .withComponent(new ECSA.GenericComponent('rotation').doOnUpdate((cmp, delta, absolute) => cmp.owner.asText().rotation += 0.001 * delta))
-      .asText('text', '\u0047\u004F\u004F\u0044 \u004C\u0055\u0043\u004B\u0021', new PIXI.TextStyle({ fill: '#FF0000', fontSize: 80, fontFamily: 'Courier New' }))
-      .build();
+	// init the scene and run your game
+	let factory = new Factory();
+	factory.initializeLevel(this.engine.scene)
+	// let model = new Model();
+	// model.loadModel(this.engine.app.loader.resources[Assets.DATA].data);
+	// factory.resetGame(this.engine.scene, model);
+	
+    // let scene = this.engine.scene;
+    // new ECSA.Builder(scene)
+    //   .localPos(this.engine.app.screen.width / 2, this.engine.app.screen.height / 2)
+    //   .anchor(0.5)
+    //   .withParent(scene.stage)
+    //   .withComponent(new ECSA.GenericComponent('rotation').doOnUpdate((cmp, delta, absolute) => cmp.owner.asText().rotation += 0.001 * delta))
+    //   .asText('text', '\u0047\u004F\u004F\u0044 \u004C\u0055\u0043\u004B\u0021', new PIXI.TextStyle({ fill: '#FF0000', fontSize: 80, fontFamily: 'Courier New' }))
+    //   .build();
   }
 }
 
