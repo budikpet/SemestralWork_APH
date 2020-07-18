@@ -1,6 +1,6 @@
 import * as ECSA from '../libs/pixi-component';
 import * as PIXI from 'pixi.js';
-import DynamicsComponent from './utils/dynamics-component';
+import DynamicsComponent from './utils/dynamics_component';
 
 export class Factory {
 
