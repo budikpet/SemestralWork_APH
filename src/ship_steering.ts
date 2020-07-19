@@ -25,6 +25,7 @@ abstract class SteeringComponent extends DynamicsComponent {
 		super.onUpdate(delta, absolute);
 		let newQuadrat = this.getQuadrat(this.dynamics.velocity)
 
+		// Progresivelly stops the ship
 		if(this.brakesActive) {
 			let c = 0.5
 			let counterDynamics = new ECSA.Vector(c*Math.sign(this.dynamics.velocity.x), c*Math.sign(this.dynamics.velocity.y))
@@ -50,7 +51,7 @@ abstract class SteeringComponent extends DynamicsComponent {
 				sign = -1
 			}
 		} else {
-			// If we stay in a quadrat then both current and desired rotation should be positive/negative
+			// If we stay in a quadrat or go between other quadrats then both current and desired rotation should be positive/negative
 			if(currentRotation < 0 && desiredRotation > 0) {
 				desiredRotation -= 2*Math.PI
 			} else if(currentRotation > 0 && desiredRotation < 0) {
@@ -59,28 +60,7 @@ abstract class SteeringComponent extends DynamicsComponent {
 			sign = Math.sign(desiredRotation - currentRotation)
 		}
 
-		console.log("Curr/desired ", currentRotation,"/",desiredRotation, " for sign (",sign, ") and currQ/newQ: (",currQuadrat, "/", newQuadrat,")")
-
-		// var desired2p = desiredRotation < 0 ? desiredRotation + 2*Math.PI : desiredRotation - 2*Math.PI
-
-		// if(Math.abs(Math.abs(currentRotation) - Math.abs(desired2p)) < Math.abs(Math.abs(currentRotation) - Math.abs(desiredRotation))) {
-		// 	desiredRotation = desired2p
-		// }
-
-		// if(currentRotation < 0 && desiredRotation > 0) {
-		// 	let desiredPurple = desiredRotation
-		// 	let desiredGreen = desiredRotation - 2*Math.PI
-
-			
-
-		// } else if(currentRotation > 0 && desiredRotation < 0) {
-		// 	let desiredPurple = desiredRotation + 2*Math.PI
-		// 	let desiredGreen = desiredRotation 
-
-		// 	if(Math.abs(currentRotation - desiredPurple) < Math.abs(currentRotation - desiredRotation)) {
-		// 		desiredRotation = desiredPurple
-		// 	}
-		// }
+		// console.log("Curr/desired ", currentRotation,"/",desiredRotation, " for sign (",sign, ") and currQ/newQ: (",currQuadrat, "/", newQuadrat,")")
 
 		let rotated = Math.abs(currentRotation - desiredRotation) < 0.1;
 		if (!rotated) {
@@ -88,10 +68,12 @@ abstract class SteeringComponent extends DynamicsComponent {
 		}
 	}
 
+	// Returns true if the ship doesn't move
 	standsStill(): boolean {
 		return this.dynamics.velocity.magnitude() === 0
 	}
 
+	// Returns a quadrat number of a unit circle
 	getQuadrat(vector: ECSA.Vector): number {
 		if(vector.x > 0 && vector.y > 0) {
 			// Bottom right
@@ -131,19 +113,20 @@ export class PlayerSteeringComponent extends SteeringComponent {
 		}
 
 		// Acceleration
+		let accelerationSpeed = 10
 		if (this._inputComponent.isKeyPressed(ECSA.Keys.KEY_W)) {
-			force = force.add(new ECSA.Vector(0, -10))
+			force = force.add(new ECSA.Vector(0, -accelerationSpeed))
 			this.brakesActive = false
 		} else if (this._inputComponent.isKeyPressed(ECSA.Keys.KEY_S)) {
-			force = force.add(new ECSA.Vector(0, 10))
+			force = force.add(new ECSA.Vector(0, accelerationSpeed))
 			this.brakesActive = false
 		}
 
 		if (this._inputComponent.isKeyPressed(ECSA.Keys.KEY_A)) {
-			force = force.add(new ECSA.Vector(-10, 0))
+			force = force.add(new ECSA.Vector(-accelerationSpeed, 0))
 			this.brakesActive = false
 		} else if (this._inputComponent.isKeyPressed(ECSA.Keys.KEY_D)) {
-			force = force.add(new ECSA.Vector(10, 0))
+			force = force.add(new ECSA.Vector(accelerationSpeed, 0))
 			this.brakesActive = false
 		}
 
