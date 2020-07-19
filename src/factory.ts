@@ -9,6 +9,7 @@ export class Factory {
 
 	initializeLevel(scene: ECSA.Scene) {
 		scene.addGlobalComponent(new ECSA.KeyInputComponent());
+		scene.addGlobalComponent(new ECSA.PointerInputComponent(true, false, true))
 
 		this.addPlayer(scene)
 	}
@@ -26,7 +27,7 @@ export class Factory {
 		player.endFill();
 
 		builder
-			.scale(2*Factory.globalScale)
+			.scale(Factory.globalScale/2)
 			.relativePos(0.5, 0.5)
 			// .withComponent(new PaddleInputController())
 			// .asSprite(this.createTexture(model.getSpriteInfo(Names.PADDLE)), Names.PADDLE)

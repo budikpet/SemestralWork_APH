@@ -20,8 +20,8 @@ abstract class SteeringComponent extends DynamicsComponent {
 		}
 
 		let currQuadrat = this.getQuadrat(this.dynamics.velocity)
-		this.dynamics.acceleration = force.limit(100);
-		this.dynamics.velocity = this.dynamics.velocity.limit(1000);
+		this.dynamics.acceleration = force.limit(10);
+		this.dynamics.velocity = this.dynamics.velocity.limit(100);
 		super.onUpdate(delta, absolute);
 		let newQuadrat = this.getQuadrat(this.dynamics.velocity)
 
@@ -98,6 +98,14 @@ export class PlayerSteeringComponent extends SteeringComponent {
 
 	onInit() {
 		super.onInit()
+		this.subscribe(ECSA.PointerMessages.POINTER_OVER)
+	}
+
+	onMessage(msg: ECSA.Message) {
+		if(msg.action === ECSA.PointerMessages.POINTER_OVER) {
+			let info = msg.data.mousePos
+			console.log(info)
+		}
 	}
 
 	protected calcForce(delta: number): ECSA.Vector {
