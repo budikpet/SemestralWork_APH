@@ -1,7 +1,7 @@
 import * as ECSA from '../libs/pixi-component';
 import * as PIXI from 'pixi.js';
 import DynamicsComponent from './utils/dynamics_component';
-import { PlayerSteeringComponent } from './ship_steering';
+import { PlayerSteeringComponent } from './steering_component';
 import { Attributes } from './constants';
 import { PlayerRotationComponent } from './rotation_component';
 
