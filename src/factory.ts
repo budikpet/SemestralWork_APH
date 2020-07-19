@@ -21,10 +21,8 @@ export class Factory {
 			.withParent(scene.stage)
 			.withComponent(new ECSA.GenericComponent('rotation')
 				.doOnUpdate((cmp, delta, absolute) => {
-					let tmp = player.getGlobalPosition()
 					let localPosStr = `${Math.floor(player.position.x)}/${Math.floor(player.position.y)}`
-					let globalPosStr = `${Math.floor(tmp.x)}/${Math.floor(tmp.y)}`
-					cmp.owner.asText().text = `Pos [loc] (glob): [${localPosStr}] (${globalPosStr})`
+					cmp.owner.asText().text = `Pos [loc]: [${localPosStr}]`
 				})
 			)
 			.asText('text', "tst", new PIXI.TextStyle({ fill: '#FF0000', fontSize: 10 }))
@@ -44,7 +42,7 @@ export class Factory {
 		player.endFill();
 
 		return builder
-			.scale(Factory.globalScale/2)
+			.scale(Factory.globalScale)
 			.relativePos(0.5, 0.5)
 			// .withComponent(new PaddleInputController())
 			// .asSprite(this.createTexture(model.getSpriteInfo(Names.PADDLE)), Names.PADDLE)

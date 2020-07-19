@@ -26,5 +26,5 @@ Controls
 ______________
 
 :Movement: W/A/S/D
-:Shooting: J
-:Super speed: Spacebar
+:Shooting: Left mouse button
+:Player rotation: Mouse

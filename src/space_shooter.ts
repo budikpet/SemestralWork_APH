@@ -10,7 +10,7 @@ class MyGame {
     let canvas = (document.getElementById('gameCanvas') as HTMLCanvasElement);
 
     // init the game loop
-    this.engine.init(canvas, canvas.width, canvas.height, 1, // width, height, resolution
+    this.engine.init(canvas, 800, 600, 1, // width, height, resolution
       {
        flagsSearchEnabled: false, // searching by flags feature
        statesSearchEnabled: false, // searching by states feature

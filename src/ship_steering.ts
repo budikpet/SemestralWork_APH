@@ -10,7 +10,7 @@ import { Attributes } from "./constants";
  */
 abstract class SteeringComponent extends DynamicsComponent {
 	math = new SteeringMath();
-	maxVelocity = 100
+	maxVelocity = 500
 
 	onUpdate(delta: number, absolute: number) {
 
