@@ -75,19 +75,19 @@ export class PlayerSteeringComponent extends SteeringComponent {
 		}
 
 		// Acceleration
-		if (this._inputComponent.isKeyPressed(ECSA.Keys.KEY_UP)) {
-			force = force.add(new ECSA.Vector(0, -100))
+		if (this._inputComponent.isKeyPressed(ECSA.Keys.KEY_W)) {
+			force = force.add(new ECSA.Vector(0, -10))
 			this.brakesActive = false
-		} else if (this._inputComponent.isKeyPressed(ECSA.Keys.KEY_DOWN)) {
-			force = force.add(new ECSA.Vector(0, 100))
+		} else if (this._inputComponent.isKeyPressed(ECSA.Keys.KEY_S)) {
+			force = force.add(new ECSA.Vector(0, 10))
 			this.brakesActive = false
 		}
 
-		if (this._inputComponent.isKeyPressed(ECSA.Keys.KEY_LEFT)) {
-			force = force.add(new ECSA.Vector(-100, 0))
+		if (this._inputComponent.isKeyPressed(ECSA.Keys.KEY_A)) {
+			force = force.add(new ECSA.Vector(-10, 0))
 			this.brakesActive = false
-		} else if (this._inputComponent.isKeyPressed(ECSA.Keys.KEY_RIGHT)) {
-			force = force.add(new ECSA.Vector(100, 0))
+		} else if (this._inputComponent.isKeyPressed(ECSA.Keys.KEY_D)) {
+			force = force.add(new ECSA.Vector(10, 0))
 			this.brakesActive = false
 		}
 
@@ -100,7 +100,7 @@ export class PlayerSteeringComponent extends SteeringComponent {
 			}
 		}
 
-		// console.log(this.owner.rotation*180/Math.PI)
+		console.log("Rad/Dg: ",this.owner.rotation," / ",this.owner.rotation*180/Math.PI)
 		return force
 	}
 
