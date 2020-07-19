@@ -12,10 +12,25 @@ export class Factory {
 		scene.addGlobalComponent(new ECSA.KeyInputComponent());
 		scene.addGlobalComponent(new ECSA.PointerInputComponent(true, false, true))
 
-		this.addPlayer(scene)
+		let player = this.addPlayer(scene)
+
+		new ECSA.Builder(scene)
+			.relativePos(0.75, 0.75)
+			.anchor(0.5)
+			.withParent(scene.stage)
+			.withComponent(new ECSA.GenericComponent('rotation')
+				.doOnUpdate((cmp, delta, absolute) => {
+					let tmp = player.getGlobalPosition()
+					let localPosStr = `${Math.floor(player.position.x)}/${Math.floor(player.position.y)}`
+					let globalPosStr = `${Math.floor(tmp.x)}/${Math.floor(tmp.y)}`
+					cmp.owner.asText().text = `Pos [loc] (glob): [${localPosStr}] (${globalPosStr})`
+				})
+			)
+			.asText('text', "tst", new PIXI.TextStyle({ fill: '#FF0000', fontSize: 10 }))
+			.build();
 	}
 
-	addPlayer(scene: ECSA.Scene) {
+	addPlayer(scene: ECSA.Scene): ECSA.Container {
 		let builder = new ECSA.Builder(scene);
 
 		let player = new ECSA.Graphics(Attributes.PLAYER);
@@ -27,7 +42,7 @@ export class Factory {
 		// player.lineTo(100, 100);
 		player.endFill();
 
-		builder
+		return builder
 			.scale(Factory.globalScale/2)
 			.relativePos(0.5, 0.5)
 			// .withComponent(new PaddleInputController())
