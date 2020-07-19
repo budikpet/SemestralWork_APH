@@ -2,6 +2,7 @@ import * as ECSA from '../libs/pixi-component';
 import * as PIXI from 'pixi.js';
 import DynamicsComponent from './utils/dynamics_component';
 import { PlayerSteeringComponent } from './ship_steering';
+import { Attributes } from './constants';
 
 export class Factory {
 
@@ -17,7 +18,7 @@ export class Factory {
 	addPlayer(scene: ECSA.Scene) {
 		let builder = new ECSA.Builder(scene);
 
-		let player = new ECSA.Graphics('Player');
+		let player = new ECSA.Graphics(Attributes.PLAYER);
 		player.beginFill(0x47a1d5);
 		player.drawPolygon([-10, -10, -10, 10, 15, 0]);
 		// player.moveTo(100, 100)

@@ -1,6 +1,7 @@
 import DynamicsComponent from "./utils/dynamics_component";
 import { Path, PathContext, SteeringMath } from '../libs/pixi-math';
 import * as ECSA from '../libs/pixi-component';
+import { Attributes } from "./constants";
 
 
 
@@ -10,6 +11,7 @@ import * as ECSA from '../libs/pixi-component';
 abstract class SteeringComponent extends DynamicsComponent {
 	math = new SteeringMath();
 	brakesActive: Boolean = false
+	maxVelocity = 100
 
 	onUpdate(delta: number, absolute: number) {
 
@@ -20,8 +22,8 @@ abstract class SteeringComponent extends DynamicsComponent {
 		}
 
 		let currQuadrat = this.getQuadrat(this.dynamics.velocity)
-		this.dynamics.acceleration = force.limit(10);
-		this.dynamics.velocity = this.dynamics.velocity.limit(100);
+		this.dynamics.acceleration = force.limit(this.maxVelocity/10);
+		this.dynamics.velocity = this.dynamics.velocity.limit(this.maxVelocity);
 		super.onUpdate(delta, absolute);
 		let newQuadrat = this.getQuadrat(this.dynamics.velocity)
 
@@ -95,6 +97,7 @@ abstract class SteeringComponent extends DynamicsComponent {
 
 export class PlayerSteeringComponent extends SteeringComponent {
 	_inputComponent: ECSA.KeyInputComponent
+	mousePos: ECSA.Vector = new ECSA.Vector(0, 0)
 
 	onInit() {
 		super.onInit()
@@ -103,14 +106,12 @@ export class PlayerSteeringComponent extends SteeringComponent {
 
 	onMessage(msg: ECSA.Message) {
 		if(msg.action === ECSA.PointerMessages.POINTER_OVER) {
-			let info = msg.data.mousePos
-			console.log(info)
+			let mousePos = msg.data.mousePos
+			this.mousePos = new ECSA.Vector(mousePos.posX, mousePos.posY)
 		}
 	}
 
 	protected calcForce(delta: number): ECSA.Vector {
-		var force: ECSA.Vector = new ECSA.Vector(0, 0)
-
 		if(this._inputComponent == null) {
 			this._inputComponent = this.scene.stage.findComponentByName<ECSA.KeyInputComponent>(ECSA.KeyInputComponent.name);
 		}
@@ -120,33 +121,26 @@ export class PlayerSteeringComponent extends SteeringComponent {
 			this.brakesActive = true
 		}
 
+		let ownerPos = new ECSA.Vector(this.owner.position.x, this.owner.position.y)
+		let force = this.math.seek(this.mousePos, ownerPos, this.dynamics.velocity, this.maxVelocity, 1)
+
 		// Acceleration
-		let accelerationSpeed = 10
 		if (this._inputComponent.isKeyPressed(ECSA.Keys.KEY_W)) {
-			force = force.add(new ECSA.Vector(0, -accelerationSpeed))
 			this.brakesActive = false
 		} else if (this._inputComponent.isKeyPressed(ECSA.Keys.KEY_S)) {
-			force = force.add(new ECSA.Vector(0, accelerationSpeed))
-			this.brakesActive = false
-		}
-
-		if (this._inputComponent.isKeyPressed(ECSA.Keys.KEY_A)) {
-			force = force.add(new ECSA.Vector(-accelerationSpeed, 0))
-			this.brakesActive = false
-		} else if (this._inputComponent.isKeyPressed(ECSA.Keys.KEY_D)) {
-			force = force.add(new ECSA.Vector(accelerationSpeed, 0))
-			this.brakesActive = false
+			this.brakesActive = true
 		}
 
 		// Rotation only
-		if(this.standsStill()) {
-			if (this._inputComponent.isKeyPressed(ECSA.Keys.KEY_Q)) {
+		if(this.brakesActive && this.standsStill()) {
+			if (this._inputComponent.isKeyPressed(ECSA.Keys.KEY_A)) {
 				this.owner.rotation = this.getNewRotation(-1)
 				console.log("Rad/Dg: ",this.owner.rotation," / ",this.owner.rotation*180/Math.PI)
-			} else if (this._inputComponent.isKeyPressed(ECSA.Keys.KEY_E)) {
+			} else if (this._inputComponent.isKeyPressed(ECSA.Keys.KEY_D)) {
 				this.owner.rotation = this.getNewRotation(1)
 				console.log("Rad/Dg: ",this.owner.rotation," / ",this.owner.rotation*180/Math.PI)
 			}
+			return null
 		}
 
 		return force

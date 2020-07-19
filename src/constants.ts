@@ -4,6 +4,10 @@ export enum Messages {
 export enum Assets {
 }
 
+export enum Attributes {
+	PLAYER = "player"
+}
+
 // height of the scene will be set to 25 units for the purpose of better calculations
 export const SCENE_HEIGHT = 25;
 
