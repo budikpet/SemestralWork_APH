@@ -3,6 +3,7 @@ import * as PIXI from 'pixi.js';
 import DynamicsComponent from './utils/dynamics_component';
 import { PlayerSteeringComponent } from './ship_steering';
 import { Attributes } from './constants';
+import { PlayerRotationComponent } from './rotation_component';
 
 export class Factory {
 
@@ -48,6 +49,7 @@ export class Factory {
 			// .withComponent(new PaddleInputController())
 			// .asSprite(this.createTexture(model.getSpriteInfo(Names.PADDLE)), Names.PADDLE)
 			.withComponent(new PlayerSteeringComponent("PlayerSteering", 10))
+			.withComponent(new PlayerRotationComponent())
 			.withParent(scene.stage)
 			.buildInto(player);
 	}
