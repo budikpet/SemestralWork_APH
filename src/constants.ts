@@ -1,4 +1,5 @@
 export enum Messages {
+	CREATE_PROJECTILE = "create_projectile"
 }
 
 export enum Assets {

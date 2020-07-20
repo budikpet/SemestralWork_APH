@@ -1,7 +1,7 @@
 import DynamicsComponent from "./utils/dynamics_component";
 import { Path, PathContext, SteeringMath } from '../libs/pixi-math';
 import * as ECSA from '../libs/pixi-component';
-import { Attributes } from "./constants";
+import { Attributes, Assets, Messages } from "./constants";
 
 
 
@@ -16,6 +16,11 @@ abstract class RotationComponent extends ECSA.Component {
 		// change rotation based on the target
 		let force = this.calcForce(delta)
 
+		var desiredRotation = Math.atan2(force.y, force.x);
+		this.owner.rotation = desiredRotation
+	}
+
+	_useGradualRotation(force: ECSA.Vector) {
 		var desiredRotation = Math.atan2(force.y, force.x);
 		let currentRotation = this.owner.rotation;
 
@@ -83,6 +88,11 @@ export class PlayerRotationComponent extends RotationComponent {
 		if(msg.action === ECSA.PointerMessages.POINTER_OVER) {
 			let mousePos = msg.data.mousePos
 			this.mousePos = new ECSA.Vector(mousePos.posX, mousePos.posY)
+		}
+
+		if(msg.action === ECSA.PointerMessages.POINTER_TAP) {
+			// Send create projectile message
+			this.sendMessage(Messages.CREATE_PROJECTILE, this.mousePos)
 		}
 	}
 

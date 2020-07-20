@@ -11,7 +11,7 @@ export class Factory {
 
 	initializeLevel(scene: ECSA.Scene) {
 		scene.addGlobalComponent(new ECSA.KeyInputComponent());
-		scene.addGlobalComponent(new ECSA.PointerInputComponent(true, false, true))
+		scene.addGlobalComponent(new ECSA.PointerInputComponent(true, false, true, false))
 
 		let player = this.addPlayer(scene)
 
