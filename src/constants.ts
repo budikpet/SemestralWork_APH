@@ -6,7 +6,9 @@ export enum Assets {
 }
 
 export enum Attributes {
-	PLAYER = "player"
+	PLAYER = "player",
+	FACTORY = "factory",
+	GAME_MODEL = "gameModel"
 }
 
 // height of the scene will be set to 25 units for the purpose of better calculations
