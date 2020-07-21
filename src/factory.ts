@@ -4,6 +4,7 @@ import { PlayerSteeringComponent } from './steering_component';
 import { Attributes, HEIGHT, WALLS_SIZE, WIDTH } from './constants';
 import { PlayerRotationComponent } from './rotation_component';
 import { GameModel } from './game_model';
+import { CollisionManagerComponent } from './collision_manager_component';
 
 export class Factory {
 	static globalScale = 1;
@@ -17,6 +18,7 @@ export class Factory {
 		
 		scene.addGlobalComponent(new ECSA.KeyInputComponent());
 		scene.addGlobalComponent(new ECSA.PointerInputComponent(true, false, true, false))
+		scene.addGlobalComponent(new CollisionManagerComponent(gameModel))
 
 		this.addWalls(scene, gameModel)
 		this.addPlayer(scene, gameModel)
@@ -29,22 +31,27 @@ export class Factory {
 		let wallLeft = new ECSA.Graphics(Attributes.WALL_LEFT)
 		let wallRight = new ECSA.Graphics(Attributes.WALL_RIGHT)
 		let wallColor = 0xE23814
+		gameModel.walls = [wallTop, wallBottom, wallLeft, wallRight]
 
 		wallTop.beginFill(wallColor);
 		wallTop.drawRect(0, 0, WIDTH, WALLS_SIZE*2)
 		wallTop.endFill()
+		wallTop.assignAttribute(Attributes.WALL_REPULSIVE_FORCE, new ECSA.Vector(0, 1))
 
 		wallBottom.beginFill(wallColor);
 		wallBottom.drawRect(0, 0, WIDTH, WALLS_SIZE)
 		wallBottom.endFill()
+		wallBottom.assignAttribute(Attributes.WALL_REPULSIVE_FORCE, new ECSA.Vector(0, -1))
 
 		wallLeft.beginFill(wallColor);
 		wallLeft.drawRect(0, 0, WALLS_SIZE, HEIGHT)
 		wallLeft.endFill()
+		wallLeft.assignAttribute(Attributes.WALL_REPULSIVE_FORCE, new ECSA.Vector(1, 0))
 
 		wallRight.beginFill(wallColor);
 		wallRight.drawRect(0, 0, WALLS_SIZE, HEIGHT)
 		wallRight.endFill()
+		wallRight.assignAttribute(Attributes.WALL_REPULSIVE_FORCE, new ECSA.Vector(-1, 0))
 
 
 		new ECSA.Builder(scene).withParent(scene.stage).scale(Factory.globalScale).relativePos(0, 0).buildInto(wallTop)
@@ -71,7 +78,7 @@ export class Factory {
 			.scale(Factory.globalScale)
 			.relativePos(0.5, 0.5)
 			// .asSprite(this.createTexture(model.getSpriteInfo(Names.PADDLE)), Names.PADDLE)
-			.withComponent(new PlayerSteeringComponent("PlayerSteering", gameModel))
+			.withComponent(new PlayerSteeringComponent(Attributes.PLAYER_STEERING, gameModel))
 			.withComponent(new PlayerRotationComponent())
 			.withParent(scene.stage)
 			.buildInto(player);

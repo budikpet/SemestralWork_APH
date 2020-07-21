@@ -1,5 +1,8 @@
 export enum Messages {
-	CREATE_PROJECTILE = "create_projectile"
+	CREATE_PROJECTILE = "create_projectile",
+
+	WALL_COLLISION = "wall_collision",
+
 }
 
 export enum Assets {
@@ -10,8 +13,10 @@ export enum Attributes {
 	WALL_BOTTOM = "wallBottom",
 	WALL_LEFT = "wallLeft",
 	WALL_RIGHT = "wallRight",
+	WALL_REPULSIVE_FORCE = "wallRepulsiveForce",
 
 	PLAYER = "player",
+	PLAYER_STEERING = "player_steering",
 	FACTORY = "factory",
 	GAME_MODEL = "gameModel"
 }

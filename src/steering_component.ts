@@ -1,8 +1,9 @@
 import DynamicsComponent from "./utils/dynamics_component";
 import { Path, PathContext, SteeringMath } from '../libs/pixi-math';
 import * as ECSA from '../libs/pixi-component';
-import { Attributes } from "./constants";
+import { Attributes, Messages } from "./constants";
 import { GameModel } from "./game_model";
+import { WallCollisionMsg } from "./collision_manager_component";
 
 
 
@@ -16,6 +17,22 @@ abstract class SteeringComponent extends DynamicsComponent {
 	constructor(attrName: string, model: GameModel) {
 		super(attrName, model.gameSpeed);
 		this.model = model
+	}
+
+	onInit() {
+		super.onInit()
+		this.subscribe(Messages.WALL_COLLISION)
+	}
+
+	onMessage(msg: ECSA.Message) {
+		if(msg.action === Messages.WALL_COLLISION) {
+			let collisionMsg: WallCollisionMsg = msg.data
+			if(collisionMsg.character.id === this.owner.id) {
+				let repulsiveForce: ECSA.Vector = collisionMsg.wall.getAttribute(Attributes.WALL_REPULSIVE_FORCE)
+				this.dynamics.velocity = this.dynamics.velocity.add(repulsiveForce.multiply(10))
+				this.dynamics.acceleration = this.dynamics.acceleration.add(repulsiveForce.multiply(10))
+			}
+		}
 	}
 
 	onUpdate(delta: number, absolute: number) {
