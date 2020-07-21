@@ -7,8 +7,8 @@ export class GameModel {
 	maxCharacterAcceleration: number = this.maxCharacterVelocity/10
 	maxProjectileVelocity: number = 600
 	maxProjectileAcceleration: number = this.maxProjectileVelocity/5
-
 	///
+	
 	gameSpeed: number = 10
 
 	protected _player: ECSA.Container

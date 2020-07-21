@@ -1,7 +1,7 @@
 import * as ECSA from '../libs/pixi-component';
 import * as PIXI from 'pixi.js';
 import { PlayerSteeringComponent } from './steering_component';
-import { Attributes } from './constants';
+import { Attributes, HEIGHT, WALLS_SIZE, WIDTH } from './constants';
 import { PlayerRotationComponent } from './rotation_component';
 import { GameModel } from './game_model';
 
@@ -18,8 +18,40 @@ export class Factory {
 		scene.addGlobalComponent(new ECSA.KeyInputComponent());
 		scene.addGlobalComponent(new ECSA.PointerInputComponent(true, false, true, false))
 
+		this.addWalls(scene, gameModel)
 		this.addPlayer(scene, gameModel)
 		this.addUI(scene, gameModel)
+	}
+
+	addWalls(scene: ECSA.Scene, gameModel: GameModel) {
+		let wallTop = new ECSA.Graphics(Attributes.WALL_TOP)
+		let wallBottom = new ECSA.Graphics(Attributes.WALL_BOTTOM)
+		let wallLeft = new ECSA.Graphics(Attributes.WALL_LEFT)
+		let wallRight = new ECSA.Graphics(Attributes.WALL_RIGHT)
+		let wallColor = 0xE23814
+
+		wallTop.beginFill(wallColor);
+		wallTop.drawRect(0, 0, WIDTH, WALLS_SIZE*2)
+		wallTop.endFill()
+
+		wallBottom.beginFill(wallColor);
+		wallBottom.drawRect(0, 0, WIDTH, WALLS_SIZE)
+		wallBottom.endFill()
+
+		wallLeft.beginFill(wallColor);
+		wallLeft.drawRect(0, 0, WALLS_SIZE, HEIGHT)
+		wallLeft.endFill()
+
+		wallRight.beginFill(wallColor);
+		wallRight.drawRect(0, 0, WALLS_SIZE, HEIGHT)
+		wallRight.endFill()
+
+
+		new ECSA.Builder(scene).withParent(scene.stage).scale(Factory.globalScale).relativePos(0, 0).buildInto(wallTop)
+		new ECSA.Builder(scene).withParent(scene.stage).scale(Factory.globalScale).globalPos(0, HEIGHT - WALLS_SIZE).buildInto(wallBottom)
+		new ECSA.Builder(scene).withParent(scene.stage).scale(Factory.globalScale).relativePos(0, 0).buildInto(wallLeft)
+		new ECSA.Builder(scene).withParent(scene.stage).scale(Factory.globalScale).globalPos(WIDTH - WALLS_SIZE, 0).buildInto(wallRight)
+			
 	}
 
 	addPlayer(scene: ECSA.Scene, gameModel: GameModel) {
