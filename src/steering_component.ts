@@ -2,6 +2,7 @@ import DynamicsComponent from "./utils/dynamics_component";
 import { Path, PathContext, SteeringMath } from '../libs/pixi-math';
 import * as ECSA from '../libs/pixi-component';
 import { Attributes } from "./constants";
+import { GameModel } from "./game_model";
 
 
 
@@ -9,8 +10,13 @@ import { Attributes } from "./constants";
  * Base class for all steering components
  */
 abstract class SteeringComponent extends DynamicsComponent {
-	math = new SteeringMath();
-	maxVelocity = 500
+	protected math = new SteeringMath();
+	protected model: GameModel
+
+	constructor(attrName: string, model: GameModel) {
+		super(attrName, model.gameSpeed);
+		this.model = model
+	}
 
 	onUpdate(delta: number, absolute: number) {
 
@@ -21,8 +27,8 @@ abstract class SteeringComponent extends DynamicsComponent {
 			return;
 		}
 
-		this.dynamics.acceleration = force.limit(this.maxVelocity/10);
-		this.dynamics.velocity = this.dynamics.velocity.limit(this.maxVelocity);
+		this.dynamics.acceleration = force.limit(this.model.maxCharacterAcceleration);
+		this.dynamics.velocity = this.dynamics.velocity.limit(this.model.maxCharacterVelocity);
 		super.onUpdate(delta, absolute);
 	}
 

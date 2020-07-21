@@ -3,7 +3,7 @@ import * as PIXI from 'pixi.js';
 import { PlayerSteeringComponent } from './steering_component';
 import { Attributes } from './constants';
 import { PlayerRotationComponent } from './rotation_component';
-import { GameModel, PlayerModel } from './game_model';
+import { GameModel } from './game_model';
 
 export class Factory {
 	static globalScale = 1;
@@ -18,14 +18,15 @@ export class Factory {
 		scene.addGlobalComponent(new ECSA.KeyInputComponent());
 		scene.addGlobalComponent(new ECSA.PointerInputComponent(true, false, true, false))
 
-		let player = this.addPlayer(scene, gameModel)
+		this.addPlayer(scene, gameModel)
 		this.addUI(scene, gameModel)
 	}
 
-	addPlayer(scene: ECSA.Scene, gameModel: GameModel): ECSA.Container {
+	addPlayer(scene: ECSA.Scene, gameModel: GameModel) {
 		let builder = new ECSA.Builder(scene);
 
 		let player = new ECSA.Graphics(Attributes.PLAYER);
+		gameModel.player = player
 		player.beginFill(0x47a1d5);
 		player.drawPolygon([-10, -10, -10, 10, 15, 0]);
 		// player.moveTo(100, 100)
@@ -34,12 +35,11 @@ export class Factory {
 		// player.lineTo(100, 100);
 		player.endFill();
 
-		return builder
+		builder
 			.scale(Factory.globalScale)
 			.relativePos(0.5, 0.5)
-			// .withComponent(new PaddleInputController())
 			// .asSprite(this.createTexture(model.getSpriteInfo(Names.PADDLE)), Names.PADDLE)
-			.withComponent(new PlayerSteeringComponent("PlayerSteering", 10))
+			.withComponent(new PlayerSteeringComponent("PlayerSteering", gameModel))
 			.withComponent(new PlayerRotationComponent())
 			.withParent(scene.stage)
 			.buildInto(player);
@@ -52,7 +52,7 @@ export class Factory {
 			.withParent(scene.stage)
 			.withComponent(new ECSA.GenericComponent('rotation')
 				.doOnUpdate((cmp, delta, absolute) => {
-					let localPosStr = `${Math.floor(gameModel.player.obj.position.x)}/${Math.floor(gameModel.player.obj.position.y)}`
+					let localPosStr = `${Math.floor(gameModel.player.position.x)}/${Math.floor(gameModel.player.position.y)}`
 					cmp.owner.asText().text = `Pos [loc]: [${localPosStr}]`
 				})
 			)

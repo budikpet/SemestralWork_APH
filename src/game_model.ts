@@ -2,25 +2,54 @@ import * as ECSA from '../libs/pixi-component';
 
 
 export class GameModel {
-	player: PlayerModel
+	/// Static
+	maxCharacterVelocity: number = 500
+	maxCharacterAcceleration: number = this.maxCharacterVelocity/10
+	maxProjectileVelocity: number = 600
+	maxProjectileAcceleration: number = this.maxProjectileVelocity/5
 
-	walls: Array<ECSA.Container>
+	///
+	gameSpeed: number = 10
+
+	protected _player: ECSA.Container
+
+	protected _walls: Array<ECSA.Container>
 
 	// Map of all enemies <ID, EnemyObject>
-	enemies: Map<number, EnemyModel>	
+	protected _enemies: Map<number, ECSA.Container> = new Map()
 
 	// Map of all projectiles <ID, EnemyObject>
-	projectiles: Map<number, ECSA.Container>
-}
+	protected _projectiles: Map<number, ECSA.Container> = new Map()
 
-export class PlayerModel {
-	obj: ECSA.Container
-	maxVelocity: Number
-	attackSpeed: Number
-}
+	public get player(): ECSA.Container {
+		return this._player
+	}
 
-export class EnemyModel {
-	obj: ECSA.Container
-	maxVelocity: Number
-	attackSpeed: Number
+	public set player(player: ECSA.Container) {
+		this._player = player
+	}
+
+	public get walls(): Array<ECSA.Container> {
+		return this._walls
+	}
+
+	public set walls(walls: Array<ECSA.Container>) {
+		this._walls = walls
+	}
+
+	public addEnemy(enemy: ECSA.Container) {
+		this._enemies.set(enemy.id, enemy)
+	}
+
+	public removeEnemy(id: number) {
+		this._enemies.delete(id)
+	}
+
+	public addProjectile(enemy: ECSA.Container) {
+		this._projectiles.set(enemy.id, enemy)
+	}
+
+	public removeProjectile(id: number) {
+		this._projectiles.delete(id)
+	}
 }
