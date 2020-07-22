@@ -1,6 +1,6 @@
 import * as ECSA from '../libs/pixi-component';
 import * as PIXI from 'pixi.js';
-import { PlayerMovementComponent } from './components/movement_component';
+import { PlayerMovementComponent, ProjectileMovementComponent } from './components/movement_component';
 import { Attributes, HEIGHT, WALLS_SIZE, WIDTH } from './constants';
 import { PlayerWeaponComponent } from './components/cannon_component';
 import { GameModel } from './game_model';
@@ -113,6 +113,9 @@ export class Factory {
 
 		new ECSA.Builder(character.scene)
 			.localPos(character.x, character.y)
+			.anchor(0.5)
+			.withComponent(new ProjectileMovementComponent(Attributes.PROJECTILE_MOVEMENT, gameModel, character.rotation))
+			.withParent(character.scene.stage)
 			.buildInto(projectile)
 	}
 }

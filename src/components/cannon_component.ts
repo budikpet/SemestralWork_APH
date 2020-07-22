@@ -26,7 +26,7 @@ abstract class WeaponComponent extends ECSA.Component {
 
 		this.attackFrequency = this.owner.getAttribute(Attributes.ATTACK_FREQUENCY)
 
-		if(this.attackFrequency === null) {
+		if(this.attackFrequency == null) {
 			this.attackFrequency = this.gameModel.baseAttackFrequency
 		}
 	}
@@ -40,6 +40,7 @@ abstract class WeaponComponent extends ECSA.Component {
 
 		if(this.shouldFire) {
 			this.tryFire(absolute)
+			this.shouldFire = false
 		}
 	}
 
@@ -115,6 +116,7 @@ export class PlayerWeaponComponent extends WeaponComponent {
 	onInit() {
 		super.onInit()
 		this.subscribe(ECSA.PointerMessages.POINTER_OVER)
+		this.subscribe(ECSA.PointerMessages.POINTER_TAP)
 	}
 
 	onMessage(msg: ECSA.Message) {

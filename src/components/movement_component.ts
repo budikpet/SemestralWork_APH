@@ -13,8 +13,8 @@ import { WallCollisionMsg } from "./collision_manager_component";
 abstract class MovementComponent extends DynamicsComponent {
 	protected math = new SteeringMath();
 	protected gameModel: GameModel
-	protected maxVelocity: number
-	protected maxAcceleration: number
+	protected maxVelocity: number = 0
+	protected maxAcceleration: number = 0
 
 	constructor(attrName: string, gameModel: GameModel) {
 		super(attrName, gameModel.gameSpeed);
@@ -28,11 +28,11 @@ abstract class MovementComponent extends DynamicsComponent {
 		this.maxVelocity = this.owner.getAttribute(Attributes.MAX_VELOCITY)
 		this.maxAcceleration = this.owner.getAttribute(Attributes.MAX_ACCELERATION)
 
-		if(this.maxVelocity === null) {
+		if(this.maxVelocity == null) {
 			this.maxVelocity = this.gameModel.baseVelocity
 		}
 
-		if(this.maxAcceleration === null) {
+		if(this.maxAcceleration == null) {
 			this.maxAcceleration = this.gameModel.baseAcceleration
 		}
 	}
@@ -117,11 +117,14 @@ export class ProjectileMovementComponent extends MovementComponent {
 	}
 
 	onInit() {
+		super.onInit()
 		this.owner.rotation = this.initialRotation
 
 		let pos = this.owner.position
-		let velX = pos.x + Math.cos(this.initialRotation)
-		let velY = pos.y + Math.sin(this.initialRotation)
+		let velX = 10*Math.cos(this.initialRotation)
+		let velY = 10*Math.sin(this.initialRotation)
+
+		console.log(`Rot [x, y]: ${this.initialRotation} [${velX}, ${velY}]`)
 		this.directionVect = new ECSA.Vector(velX, velY).multiply(10)
 	}
 
