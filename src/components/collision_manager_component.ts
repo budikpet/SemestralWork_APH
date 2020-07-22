@@ -13,6 +13,9 @@ export class WallCollisionMsg {
 	}
 }
 
+/**
+ * Checks collisions of all objects in the game.
+ */
 export class CollisionManagerComponent extends ECSA.Component {
 	protected gameModel: GameModel;
 

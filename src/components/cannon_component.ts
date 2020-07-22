@@ -6,7 +6,7 @@ import { Attributes, Assets, Messages } from "../constants";
 
 
 /**
- * Base class for all weapon handling components.
+ * Base class for all weapon handling components. Handles rotation of the character and weapon fireing.
  */
 abstract class WeaponComponent extends ECSA.Component {
 	math = new SteeringMath();

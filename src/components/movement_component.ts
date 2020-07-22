@@ -8,7 +8,7 @@ import { WallCollisionMsg } from "./collision_manager_component";
 
 
 /**
- * Base class for all steering components
+ * Base class for all movements components.
  */
 abstract class MovementComponent extends DynamicsComponent {
 	protected math = new SteeringMath();
@@ -57,6 +57,9 @@ abstract class MovementComponent extends DynamicsComponent {
 	protected abstract calcForce(delta: number): ECSA.Vector;
 }
 
+/**
+ * Implements player movement.
+ */
 export class PlayerMovementComponent extends MovementComponent {
 	_inputComponent: ECSA.KeyInputComponent
 	mousePos: ECSA.Vector = new ECSA.Vector(0, 0)
