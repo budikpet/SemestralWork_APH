@@ -124,7 +124,6 @@ export class ProjectileMovementComponent extends MovementComponent {
 		let velX = 10*Math.cos(this.initialRotation)
 		let velY = 10*Math.sin(this.initialRotation)
 
-		console.log(`Rot [x, y]: ${this.initialRotation} [${velX}, ${velY}]`)
 		this.directionVect = new ECSA.Vector(velX, velY).multiply(10)
 	}
 

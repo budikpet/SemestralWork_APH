@@ -20,7 +20,7 @@ export class Factory {
 		scene.assignGlobalAttribute(Attributes.GAME_MODEL, gameModel);
 		
 		scene.addGlobalComponent(new ECSA.KeyInputComponent());
-		scene.addGlobalComponent(new ECSA.PointerInputComponent(true, false, true, false))
+		scene.addGlobalComponent(new ECSA.PointerInputComponent(false, true, true, true))
 		scene.addGlobalComponent(new CollisionManagerComponent(gameModel))
 
 		this.addWalls(scene, gameModel)
@@ -115,6 +115,8 @@ export class Factory {
 			.localPos(character.x, character.y)
 			.anchor(0.5)
 			.withComponent(new ProjectileMovementComponent(Attributes.PROJECTILE_MOVEMENT, gameModel, character.rotation))
+			.withAttribute(Attributes.MAX_VELOCITY, gameModel.baseVelocity*1.25)
+			.withAttribute(Attributes.MAX_ACCELERATION, gameModel.baseAcceleration*1.75)
 			.withParent(character.scene.stage)
 			.buildInto(projectile)
 	}

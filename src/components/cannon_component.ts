@@ -40,7 +40,6 @@ abstract class WeaponComponent extends ECSA.Component {
 
 		if(this.shouldFire) {
 			this.tryFire(absolute)
-			this.shouldFire = false
 		}
 	}
 
@@ -116,7 +115,8 @@ export class PlayerWeaponComponent extends WeaponComponent {
 	onInit() {
 		super.onInit()
 		this.subscribe(ECSA.PointerMessages.POINTER_OVER)
-		this.subscribe(ECSA.PointerMessages.POINTER_TAP)
+		this.subscribe(ECSA.PointerMessages.POINTER_DOWN)
+		this.subscribe(ECSA.PointerMessages.POINTER_RELEASE)
 	}
 
 	onMessage(msg: ECSA.Message) {
@@ -125,8 +125,12 @@ export class PlayerWeaponComponent extends WeaponComponent {
 			this.mousePos = new ECSA.Vector(mousePos.posX, mousePos.posY)
 		}
 
-		if(msg.action === ECSA.PointerMessages.POINTER_TAP) {
+		if(msg.action === ECSA.PointerMessages.POINTER_DOWN) {
 			this.shouldFire = true
+		}
+
+		if(msg.action === ECSA.PointerMessages.POINTER_RELEASE) {
+			this.shouldFire = false
 		}
 	}
 
