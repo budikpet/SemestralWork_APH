@@ -1,7 +1,7 @@
-import * as ECSA from '../libs/pixi-component';
+import * as ECSA from '../../libs/pixi-component';
 import * as PIXI from 'pixi.js';
-import { GameModel } from './game_model';
-import { Messages, Attributes } from './constants';
+import { GameModel } from '../game_model';
+import { Messages, Attributes } from '../constants';
 
 export class WallCollisionMsg {
 	public character: ECSA.Container

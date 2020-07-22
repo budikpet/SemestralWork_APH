@@ -1,14 +1,14 @@
-import DynamicsComponent from "./utils/dynamics_component";
-import { Path, PathContext, SteeringMath } from '../libs/pixi-math';
-import * as ECSA from '../libs/pixi-component';
-import { Attributes, Assets, Messages } from "./constants";
+import DynamicsComponent from "../utils/dynamics_component";
+import { Path, PathContext, SteeringMath } from '../../libs/pixi-math';
+import * as ECSA from '../../libs/pixi-component';
+import { Attributes, Assets, Messages } from "../constants";
 
 
 
 /**
- * Base class for all steering components
+ * Base class for all weapon handling components.
  */
-abstract class RotationComponent extends ECSA.Component {
+abstract class WeaponComponent extends ECSA.Component {
 	math = new SteeringMath();
 	lastTarget: ECSA.Vector = new ECSA.Vector(0, 0)
 
@@ -20,7 +20,7 @@ abstract class RotationComponent extends ECSA.Component {
 		this.owner.rotation = desiredRotation
 	}
 
-	_useGradualRotation(force: ECSA.Vector) {
+	private _useGradualRotation(force: ECSA.Vector) {
 		var desiredRotation = Math.atan2(force.y, force.x);
 		let currentRotation = this.owner.rotation;
 
@@ -56,7 +56,7 @@ abstract class RotationComponent extends ECSA.Component {
 	}
 
 	// Returns a quadrat number of a unit circle
-	getQuadrat(vector: ECSA.Vector): number {
+	protected getQuadrat(vector: ECSA.Vector): number {
 		if(vector.x > 0 && vector.y > 0) {
 			// Bottom right
 			return 1
@@ -75,7 +75,7 @@ abstract class RotationComponent extends ECSA.Component {
 	protected abstract calcForce(delta: number): ECSA.Vector;
 }
 
-export class PlayerRotationComponent extends RotationComponent {
+export class PlayerWeaponComponent extends WeaponComponent {
 	_inputComponent: ECSA.KeyInputComponent
 	mousePos: ECSA.Vector = new ECSA.Vector(0, 0)
 

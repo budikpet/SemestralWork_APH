@@ -1,10 +1,10 @@
 import * as ECSA from '../libs/pixi-component';
 import * as PIXI from 'pixi.js';
-import { PlayerSteeringComponent } from './steering_component';
+import { PlayerMovementComponent } from './components/movement_component';
 import { Attributes, HEIGHT, WALLS_SIZE, WIDTH } from './constants';
-import { PlayerRotationComponent } from './rotation_component';
+import { PlayerRotationComponent } from './components/rotation_component';
 import { GameModel } from './game_model';
-import { CollisionManagerComponent } from './collision_manager_component';
+import { CollisionManagerComponent } from './components/collision_manager_component';
 
 export class Factory {
 	static globalScale = 1;
@@ -78,7 +78,7 @@ export class Factory {
 			.scale(Factory.globalScale)
 			.relativePos(0.5, 0.5)
 			// .asSprite(this.createTexture(model.getSpriteInfo(Names.PADDLE)), Names.PADDLE)
-			.withComponent(new PlayerSteeringComponent(Attributes.PLAYER_STEERING, gameModel))
+			.withComponent(new PlayerMovementComponent(Attributes.PLAYER_STEERING, gameModel))
 			.withComponent(new PlayerRotationComponent())
 			.withParent(scene.stage)
 			.buildInto(player);

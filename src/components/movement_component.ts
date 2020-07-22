@@ -1,8 +1,8 @@
-import DynamicsComponent from "./utils/dynamics_component";
-import { Path, PathContext, SteeringMath } from '../libs/pixi-math';
-import * as ECSA from '../libs/pixi-component';
-import { Attributes, Messages } from "./constants";
-import { GameModel } from "./game_model";
+import DynamicsComponent from "../utils/dynamics_component";
+import { Path, PathContext, SteeringMath } from '../../libs/pixi-math';
+import * as ECSA from '../../libs/pixi-component';
+import { Attributes, Messages } from "../constants";
+import { GameModel } from "../game_model";
 import { WallCollisionMsg } from "./collision_manager_component";
 
 
@@ -10,7 +10,7 @@ import { WallCollisionMsg } from "./collision_manager_component";
 /**
  * Base class for all steering components
  */
-abstract class SteeringComponent extends DynamicsComponent {
+abstract class MovementComponent extends DynamicsComponent {
 	protected math = new SteeringMath();
 	protected model: GameModel
 
@@ -57,7 +57,7 @@ abstract class SteeringComponent extends DynamicsComponent {
 	protected abstract calcForce(delta: number): ECSA.Vector;
 }
 
-export class PlayerSteeringComponent extends SteeringComponent {
+export class PlayerMovementComponent extends MovementComponent {
 	_inputComponent: ECSA.KeyInputComponent
 	mousePos: ECSA.Vector = new ECSA.Vector(0, 0)
 
