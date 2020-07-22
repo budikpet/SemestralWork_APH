@@ -3,10 +3,9 @@ import * as ECSA from '../libs/pixi-component';
 
 export class GameModel {
 	/// Static
-	maxCharacterVelocity: number = 500
-	maxCharacterAcceleration: number = this.maxCharacterVelocity/10
-	maxProjectileVelocity: number = 600
-	maxProjectileAcceleration: number = this.maxProjectileVelocity/5
+	baseVelocity: number = 500
+	baseAcceleration: number = this.baseVelocity/10
+	baseAttackFrequency: number = 1
 	///
 	
 	gameSpeed: number = 10

@@ -9,6 +9,9 @@ export enum Assets {
 }
 
 export enum Attributes {
+	MAX_VELOCITY = "velocity",
+	MAX_ACCELERATION = "acceleration",
+
 	WALL_TOP = "wallTop",
 	WALL_BOTTOM = "wallBottom",
 	WALL_LEFT = "wallLeft",
@@ -16,9 +19,13 @@ export enum Attributes {
 	WALL_REPULSIVE_FORCE = "wallRepulsiveForce",
 
 	PLAYER = "player",
-	PLAYER_STEERING = "player_steering",
+	PLAYER_MOVEMENT = "playerMovement",
+
 	FACTORY = "factory",
-	GAME_MODEL = "gameModel"
+	GAME_MODEL = "gameModel",
+
+	PROJECTILE = "projectile",
+	ATTACK_FREQUENCY = "attackFrequency"
 }
 
 export const WALLS_SIZE = 25

@@ -12,26 +12,34 @@ import { WallCollisionMsg } from "./collision_manager_component";
  */
 abstract class MovementComponent extends DynamicsComponent {
 	protected math = new SteeringMath();
-	protected model: GameModel
+	protected gameModel: GameModel
+	protected maxVelocity: number
+	protected maxAcceleration: number
 
-	constructor(attrName: string, model: GameModel) {
-		super(attrName, model.gameSpeed);
-		this.model = model
+	constructor(attrName: string, gameModel: GameModel) {
+		super(attrName, gameModel.gameSpeed);
+		this.gameModel = gameModel
 	}
 
 	onInit() {
 		super.onInit()
 		this.subscribe(Messages.WALL_COLLISION)
+
+		this.maxVelocity = this.owner.getAttribute(Attributes.MAX_VELOCITY)
+		this.maxAcceleration = this.owner.getAttribute(Attributes.MAX_ACCELERATION)
+
+		if(this.maxVelocity === null) {
+			this.maxVelocity = this.gameModel.baseVelocity
+		}
+
+		if(this.maxAcceleration === null) {
+			this.maxAcceleration = this.gameModel.baseAcceleration
+		}
 	}
 
 	onMessage(msg: ECSA.Message) {
 		if(msg.action === Messages.WALL_COLLISION) {
-			let collisionMsg: WallCollisionMsg = msg.data
-			if(collisionMsg.character.id === this.owner.id) {
-				let repulsiveForce: ECSA.Vector = collisionMsg.wall.getAttribute(Attributes.WALL_REPULSIVE_FORCE)
-				this.dynamics.velocity = this.dynamics.velocity.add(repulsiveForce.multiply(10))
-				this.dynamics.acceleration = this.dynamics.acceleration.add(repulsiveForce.multiply(10))
-			}
+			this.onWallCollision(msg)
 		}
 	}
 
@@ -44,9 +52,18 @@ abstract class MovementComponent extends DynamicsComponent {
 			return;
 		}
 
-		this.dynamics.acceleration = force.limit(this.model.maxCharacterAcceleration);
-		this.dynamics.velocity = this.dynamics.velocity.limit(this.model.maxCharacterVelocity);
+		this.dynamics.acceleration = force.limit(this.maxAcceleration);
+		this.dynamics.velocity = this.dynamics.velocity.limit(this.maxVelocity);
 		super.onUpdate(delta, absolute);
+	}
+
+	protected onWallCollision(msg: ECSA.Message) {
+		let collisionMsg: WallCollisionMsg = msg.data
+		if(collisionMsg.character.id === this.owner.id) {
+			let repulsiveForce: ECSA.Vector = collisionMsg.wall.getAttribute(Attributes.WALL_REPULSIVE_FORCE)
+			this.dynamics.velocity = this.dynamics.velocity.add(repulsiveForce.multiply(10))
+			this.dynamics.acceleration = this.dynamics.acceleration.add(repulsiveForce.multiply(10))
+		}
 	}
 
 	// Returns true if the ship doesn't move
@@ -65,10 +82,6 @@ export class PlayerMovementComponent extends MovementComponent {
 	mousePos: ECSA.Vector = new ECSA.Vector(0, 0)
 
 	acceleration: number = 10
-
-	onInit() {
-		super.onInit()
-	}
 
 	protected calcForce(delta: number): ECSA.Vector {
 		if(this._inputComponent == null) {
@@ -90,6 +103,35 @@ export class PlayerMovementComponent extends MovementComponent {
 		}
 
 		return force
+	}
+
+}
+
+export class ProjectileMovementComponent extends MovementComponent {
+	initialRotation: number;
+	directionVect: ECSA.Vector;
+
+	constructor(attrName: string, gameModel: GameModel, initialRotation: number) {
+		super(attrName, gameModel);
+		this.initialRotation = initialRotation
+	}
+
+	onInit() {
+		this.owner.rotation = this.initialRotation
+
+		let pos = this.owner.position
+		let velX = pos.x + Math.cos(this.initialRotation)
+		let velY = pos.y + Math.sin(this.initialRotation)
+		this.directionVect = new ECSA.Vector(velX, velY).multiply(10)
+	}
+
+	protected onWallCollision(msg: ECSA.Message) {
+		// Remove projectile
+	}
+
+	protected calcForce(delta: number): ECSA.Vector {
+		
+		return this.directionVect
 	}
 
 }

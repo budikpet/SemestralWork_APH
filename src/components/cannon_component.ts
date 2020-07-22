@@ -2,6 +2,9 @@ import DynamicsComponent from "../utils/dynamics_component";
 import { Path, PathContext, SteeringMath } from '../../libs/pixi-math';
 import * as ECSA from '../../libs/pixi-component';
 import { Attributes, Assets, Messages } from "../constants";
+import { Factory } from "../factory";
+import { GameModel } from "../game_model";
+import { checkTime } from "../utils/functions";
 
 
 
@@ -9,8 +12,24 @@ import { Attributes, Assets, Messages } from "../constants";
  * Base class for all weapon handling components. Handles rotation of the character and weapon fireing.
  */
 abstract class WeaponComponent extends ECSA.Component {
-	math = new SteeringMath();
-	lastTarget: ECSA.Vector = new ECSA.Vector(0, 0)
+	protected math = new SteeringMath();
+	protected lastTarget: ECSA.Vector = new ECSA.Vector(0, 0)
+	protected factory: Factory;
+	protected gameModel: GameModel;
+	protected shouldFire: boolean = false;
+	protected lastShot: number = -1;
+	protected attackFrequency: number;
+
+	onInit() {
+		this.factory = this.scene.getGlobalAttribute<Factory>(Attributes.FACTORY)
+		this.gameModel = this.scene.getGlobalAttribute<GameModel>(Attributes.GAME_MODEL)
+
+		this.attackFrequency = this.owner.getAttribute(Attributes.ATTACK_FREQUENCY)
+
+		if(this.attackFrequency === null) {
+			this.attackFrequency = this.gameModel.baseAttackFrequency
+		}
+	}
 
 	onUpdate(delta: number, absolute: number) {
 		// change rotation based on the target
@@ -18,6 +37,10 @@ abstract class WeaponComponent extends ECSA.Component {
 
 		var desiredRotation = Math.atan2(force.y, force.x);
 		this.owner.rotation = desiredRotation
+
+		if(this.shouldFire) {
+			this.tryFire(absolute)
+		}
 	}
 
 	private _useGradualRotation(force: ECSA.Vector) {
@@ -72,6 +95,16 @@ abstract class WeaponComponent extends ECSA.Component {
 		}
 	}
 
+	protected tryFire(absoluteTime: number) {
+		if (checkTime(this.lastShot, absoluteTime, this.attackFrequency)) {
+			this.lastShot = absoluteTime;
+			this.factory.addProjectile(this.owner, this.gameModel)
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	protected abstract calcForce(delta: number): ECSA.Vector;
 }
 
@@ -91,8 +124,7 @@ export class PlayerWeaponComponent extends WeaponComponent {
 		}
 
 		if(msg.action === ECSA.PointerMessages.POINTER_TAP) {
-			// Send create projectile message
-			this.sendMessage(Messages.CREATE_PROJECTILE, this.mousePos)
+			this.shouldFire = true
 		}
 	}
 

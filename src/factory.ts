@@ -6,6 +6,9 @@ import { PlayerWeaponComponent } from './components/cannon_component';
 import { GameModel } from './game_model';
 import { CollisionManagerComponent } from './components/collision_manager_component';
 
+/**
+ * Creates all in-game objects.
+ */
 export class Factory {
 	static globalScale = 1;
 
@@ -30,7 +33,7 @@ export class Factory {
 		let wallBottom = new ECSA.Graphics(Attributes.WALL_BOTTOM)
 		let wallLeft = new ECSA.Graphics(Attributes.WALL_LEFT)
 		let wallRight = new ECSA.Graphics(Attributes.WALL_RIGHT)
-		let wallColor = 0xE23814
+		let wallColor = 0xBBBCBF
 		gameModel.walls = [wallTop, wallBottom, wallLeft, wallRight]
 
 		wallTop.beginFill(wallColor);
@@ -78,8 +81,11 @@ export class Factory {
 			.scale(Factory.globalScale)
 			.relativePos(0.5, 0.5)
 			// .asSprite(this.createTexture(model.getSpriteInfo(Names.PADDLE)), Names.PADDLE)
-			.withComponent(new PlayerMovementComponent(Attributes.PLAYER_STEERING, gameModel))
+			.withComponent(new PlayerMovementComponent(Attributes.PLAYER_MOVEMENT, gameModel))
 			.withComponent(new PlayerWeaponComponent())
+			.withAttribute(Attributes.ATTACK_FREQUENCY, 5*gameModel.baseAttackFrequency)
+			.withAttribute(Attributes.MAX_VELOCITY, gameModel.baseVelocity)
+			.withAttribute(Attributes.MAX_ACCELERATION, gameModel.baseAcceleration)
 			.withParent(scene.stage)
 			.buildInto(player);
 	}
@@ -97,5 +103,16 @@ export class Factory {
 			)
 			.asText('text', "tst", new PIXI.TextStyle({ fill: '#FF0000', fontSize: 10 }))
 			.build();
+	}
+
+	addProjectile(character: ECSA.Container, gameModel: GameModel) {
+		let projectile = new ECSA.Graphics(Attributes.PROJECTILE);
+		projectile.beginFill(0x43E214);
+		projectile.drawRect(0, 0, 20, 10)
+		projectile.endFill();
+
+		new ECSA.Builder(character.scene)
+			.localPos(character.x, character.y)
+			.buildInto(projectile)
 	}
 }

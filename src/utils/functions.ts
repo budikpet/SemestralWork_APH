@@ -48,6 +48,8 @@ export const shuffle = (arr: Array<any>) => {
 };
 
 /**
+ * lastTime, time - millis
+ * Frequency - how many times per second
  * Returns true if given time has already reached or exceeded certain period
  */
 export const checkTime = (lastTime: number, time: number, frequency: number) => {
