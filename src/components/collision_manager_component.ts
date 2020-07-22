@@ -31,9 +31,17 @@ export class CollisionManagerComponent extends ECSA.Component {
 	}
 
 	protected checkProjectileCollisions() {
-		// Projectile-character collision
+		for(let [, projectile] of this.gameModel.projectiles) {
+			// Projectile-character collision
 
-		// Projectile-wall collision
+			// Projectile-wall collision
+			for(let wall of this.gameModel.walls) {
+				if (this.testIntersection(projectile.getBounds(), wall.getBounds())) {
+					let data = new WallCollisionMsg(projectile, wall)
+					this.sendMessage(Messages.WALL_COLLISION, data)
+				}
+			}
+		}
 	}
 
 	protected checkEnemyCollisions() {

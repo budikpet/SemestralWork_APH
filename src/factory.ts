@@ -108,8 +108,10 @@ export class Factory {
 	addProjectile(character: ECSA.Container, gameModel: GameModel) {
 		let projectile = new ECSA.Graphics(Attributes.PROJECTILE);
 		projectile.beginFill(0x43E214);
-		projectile.drawRect(0, 0, 20, 10)
+		projectile.drawRect(0, 0, 10, 5)
 		projectile.endFill();
+
+		gameModel.addProjectile(projectile)
 
 		new ECSA.Builder(character.scene)
 			.localPos(character.x, character.y)

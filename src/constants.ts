@@ -29,6 +29,11 @@ export enum Attributes {
 	PROJECTILE_MOVEMENT = "projectileMovement"
 }
 
+export enum States {
+	ALIVE = "alive",
+	DEAD = "dead"
+}
+
 export const WALLS_SIZE = 25
 export var WIDTH = 800
 export var HEIGHT = 600

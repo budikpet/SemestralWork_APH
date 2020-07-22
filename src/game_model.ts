@@ -32,6 +32,10 @@ export class GameModel {
 		return this._walls
 	}
 
+	public get projectiles(): Map<number, ECSA.Container> {
+		return this._projectiles
+	}
+
 	public set walls(walls: Array<ECSA.Container>) {
 		this._walls = walls
 	}
@@ -44,8 +48,8 @@ export class GameModel {
 		this._enemies.delete(id)
 	}
 
-	public addProjectile(enemy: ECSA.Container) {
-		this._projectiles.set(enemy.id, enemy)
+	public addProjectile(projectile: ECSA.Container) {
+		this._projectiles.set(projectile.id, projectile)
 	}
 
 	public removeProjectile(id: number) {

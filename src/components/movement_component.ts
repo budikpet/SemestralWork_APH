@@ -39,7 +39,10 @@ abstract class MovementComponent extends DynamicsComponent {
 
 	onMessage(msg: ECSA.Message) {
 		if(msg.action === Messages.WALL_COLLISION) {
-			this.onWallCollision(msg)
+			let collisionMsg: WallCollisionMsg = msg.data
+			if(collisionMsg.character.id === this.owner.id) {
+				this.onWallCollision(collisionMsg)
+			}
 		}
 	}
 
@@ -57,13 +60,10 @@ abstract class MovementComponent extends DynamicsComponent {
 		super.onUpdate(delta, absolute);
 	}
 
-	protected onWallCollision(msg: ECSA.Message) {
-		let collisionMsg: WallCollisionMsg = msg.data
-		if(collisionMsg.character.id === this.owner.id) {
-			let repulsiveForce: ECSA.Vector = collisionMsg.wall.getAttribute(Attributes.WALL_REPULSIVE_FORCE)
-			this.dynamics.velocity = this.dynamics.velocity.add(repulsiveForce.multiply(10))
-			this.dynamics.acceleration = this.dynamics.acceleration.add(repulsiveForce.multiply(10))
-		}
+	protected onWallCollision(collisionMsg: WallCollisionMsg) {
+		let repulsiveForce: ECSA.Vector = collisionMsg.wall.getAttribute(Attributes.WALL_REPULSIVE_FORCE)
+		this.dynamics.velocity = this.dynamics.velocity.add(repulsiveForce.multiply(10))
+		this.dynamics.acceleration = this.dynamics.acceleration.add(repulsiveForce.multiply(10))
 	}
 
 	// Returns true if the ship doesn't move
@@ -81,8 +81,6 @@ export class PlayerMovementComponent extends MovementComponent {
 	_inputComponent: ECSA.KeyInputComponent
 	mousePos: ECSA.Vector = new ECSA.Vector(0, 0)
 
-	acceleration: number = 10
-
 	protected calcForce(delta: number): ECSA.Vector {
 		if(this._inputComponent == null) {
 			this._inputComponent = this.scene.stage.findComponentByName<ECSA.KeyInputComponent>(ECSA.KeyInputComponent.name);
@@ -91,15 +89,15 @@ export class PlayerMovementComponent extends MovementComponent {
 		let force = new ECSA.Vector(0, 0)
 
 		if (this._inputComponent.isKeyPressed(ECSA.Keys.KEY_W)) {
-			force = force.add(new ECSA.Vector(0, -this.acceleration))
+			force = force.add(new ECSA.Vector(0, -this.maxAcceleration))
 		} else if (this._inputComponent.isKeyPressed(ECSA.Keys.KEY_S)) {
-			force = force.add(new ECSA.Vector(0, this.acceleration))
+			force = force.add(new ECSA.Vector(0, this.maxAcceleration))
 		}
 
 		if (this._inputComponent.isKeyPressed(ECSA.Keys.KEY_A)) {
-			force = force.add(new ECSA.Vector(-this.acceleration, 0))
+			force = force.add(new ECSA.Vector(-this.maxAcceleration, 0))
 		} else if (this._inputComponent.isKeyPressed(ECSA.Keys.KEY_D)) {
-			force = force.add(new ECSA.Vector(this.acceleration, 0))
+			force = force.add(new ECSA.Vector(this.maxAcceleration, 0))
 		}
 
 		return force
@@ -120,19 +118,19 @@ export class ProjectileMovementComponent extends MovementComponent {
 		super.onInit()
 		this.owner.rotation = this.initialRotation
 
-		let pos = this.owner.position
-		let velX = 10*Math.cos(this.initialRotation)
-		let velY = 10*Math.sin(this.initialRotation)
+		let velX = Math.cos(this.initialRotation)
+		let velY = Math.sin(this.initialRotation)
 
-		this.directionVect = new ECSA.Vector(velX, velY).multiply(10)
+		this.directionVect = new ECSA.Vector(velX, velY).multiply(this.maxVelocity)
 	}
 
-	protected onWallCollision(msg: ECSA.Message) {
+	protected onWallCollision(collisionMsg: WallCollisionMsg) {
 		// Remove projectile
+		this.gameModel.projectiles.delete(this.owner.id)
+		this.owner.remove()
 	}
 
 	protected calcForce(delta: number): ECSA.Vector {
-		
 		return this.directionVect
 	}
 
