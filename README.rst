@@ -1,4 +1,4 @@
-APH space shooter
+APH shooter
 ======================
 A game made as a MI-APH Semestral work.
 
@@ -11,9 +11,9 @@ How to setup
 
 About the game
 -----------------------
-It is a space shooter. The player's goal is to survive as long as possible and get highest score by shooting enemy ships.
+It is a shooter. The player's goal is to survive as long as possible and get highest score by shooting enemies.
 
-The map is randomly generated at the start of the game and its size is fixed. Players can't go outside of bounds of the map.
+The map is of fixed size. Players can't go outside of bounds of the map. Enemies spawn in waves.
 
 .. figure:: docs/space_shooter_similar_sample.png
 	:align: center
@@ -26,5 +26,5 @@ Controls
 ______________
 
 :Movement: W/A/S/D
-:Shooting: J
-:Super speed: Spacebar
+:Shooting: Left mouse button
+:Player rotation: Mouse

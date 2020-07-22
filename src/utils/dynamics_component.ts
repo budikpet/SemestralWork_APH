@@ -30,8 +30,8 @@ export default class DynamicsComponent extends ECSA.Component {
 
 		// calculate delta position
 		let deltaPos = this.dynamics.calcPositionChange(delta, this.gameSpeed);
-		this.owner.pixiObj.position.x += deltaPos.x;
-		this.owner.pixiObj.position.y += deltaPos.y;
+		this.owner.position.x += deltaPos.x;
+		this.owner.position.y += deltaPos.y;
 
 	}
 }
