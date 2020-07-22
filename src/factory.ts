@@ -2,7 +2,7 @@ import * as ECSA from '../libs/pixi-component';
 import * as PIXI from 'pixi.js';
 import { PlayerMovementComponent } from './components/movement_component';
 import { Attributes, HEIGHT, WALLS_SIZE, WIDTH } from './constants';
-import { PlayerRotationComponent } from './components/rotation_component';
+import { PlayerWeaponComponent } from './components/cannon_component';
 import { GameModel } from './game_model';
 import { CollisionManagerComponent } from './components/collision_manager_component';
 
@@ -79,7 +79,7 @@ export class Factory {
 			.relativePos(0.5, 0.5)
 			// .asSprite(this.createTexture(model.getSpriteInfo(Names.PADDLE)), Names.PADDLE)
 			.withComponent(new PlayerMovementComponent(Attributes.PLAYER_STEERING, gameModel))
-			.withComponent(new PlayerRotationComponent())
+			.withComponent(new PlayerWeaponComponent())
 			.withParent(scene.stage)
 			.buildInto(player);
 	}
