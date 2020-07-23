@@ -2,7 +2,7 @@ import * as ECSA from '../libs/pixi-component';
 import * as PIXI from 'pixi.js';
 import { PlayerMovementComponent, ProjectileMovementComponent, EnemyMovementComponent } from './components/movement_component';
 import { Attributes, HEIGHT, WALLS_SIZE, WIDTH } from './constants';
-import { PlayerWeaponComponent } from './components/cannon_component';
+import { PlayerWeaponComponent, EnemyWeaponComponent } from './components/cannon_component';
 import { GameModel } from './game_model';
 import { CollisionManagerComponent } from './components/collision_manager_component';
 
@@ -108,7 +108,7 @@ export class Factory {
 			.localPos(xpos, ypos)
 			// .asSprite(this.createTexture(model.getSpriteInfo(Names.PADDLE)), Names.PADDLE)
 			.withComponent(new EnemyMovementComponent(Attributes.ENEMY_MOVEMENT, gameModel))
-			// .withComponent(new PlayerWeaponComponent())
+			.withComponent(new EnemyWeaponComponent())
 			.withAttribute(Attributes.ATTACK_FREQUENCY, gameModel.baseAttackFrequency)
 			.withAttribute(Attributes.MAX_VELOCITY, gameModel.baseVelocity)
 			.withAttribute(Attributes.MAX_ACCELERATION, gameModel.baseAcceleration)

@@ -108,6 +108,18 @@ abstract class WeaponComponent extends ECSA.Component {
 	protected abstract calcForce(delta: number): ECSA.Vector;
 }
 
+export class EnemyWeaponComponent extends WeaponComponent {
+	
+	
+	protected calcForce(delta: number): ECSA.Vector {
+		let target = new ECSA.Vector(this.gameModel.player.position.x, this.gameModel.player.position.y)
+		let ownerPos = new ECSA.Vector(this.owner.position.x, this.owner.position.y)
+		let force = this.math.seek(target, ownerPos, new ECSA.Vector(0, 0), 10000, 1)
+
+		return force
+	}
+}
+
 export class PlayerWeaponComponent extends WeaponComponent {
 	_inputComponent: ECSA.KeyInputComponent
 	mousePos: ECSA.Vector = new ECSA.Vector(0, 0)
