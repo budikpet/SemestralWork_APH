@@ -75,6 +75,25 @@ abstract class MovementComponent extends DynamicsComponent {
 }
 
 /**
+ * Implements enemy movement as wonder steering.
+ */
+export class EnemyMovementComponent extends MovementComponent {
+	wanderTarget: ECSA.Vector = new ECSA.Vector(0, 0)
+
+	onInit() {
+		super.onInit()
+		this.dynamics.velocity = new ECSA.Vector(1, 1)
+	}
+
+	protected calcForce(delta: number): ECSA.Vector {
+		let res = this.math.wander(this.dynamics.velocity, this.wanderTarget, 20, 10, 0.4, delta)
+		this.wanderTarget = res[1]
+		return res[0]
+	}
+
+}
+
+/**
  * Implements player movement.
  */
 export class PlayerMovementComponent extends MovementComponent {

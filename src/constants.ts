@@ -22,6 +22,9 @@ export enum Attributes {
 	PLAYER = "player",
 	PLAYER_MOVEMENT = "playerMovement",
 
+	ENEMY = "enemy",
+	ENEMY_MOVEMENT = "enemyMovement",
+
 	FACTORY = "factory",
 	GAME_MODEL = "gameModel",
 

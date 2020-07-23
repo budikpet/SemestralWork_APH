@@ -1,6 +1,6 @@
 import * as ECSA from '../libs/pixi-component';
 import * as PIXI from 'pixi.js';
-import { PlayerMovementComponent, ProjectileMovementComponent } from './components/movement_component';
+import { PlayerMovementComponent, ProjectileMovementComponent, EnemyMovementComponent } from './components/movement_component';
 import { Attributes, HEIGHT, WALLS_SIZE, WIDTH } from './constants';
 import { PlayerWeaponComponent } from './components/cannon_component';
 import { GameModel } from './game_model';
@@ -26,6 +26,8 @@ export class Factory {
 		this.addWalls(scene, gameModel)
 		this.addPlayer(scene, gameModel)
 		this.addUI(scene, gameModel)
+
+		this.addEnemy(scene, gameModel)
 	}
 
 	addWalls(scene: ECSA.Scene, gameModel: GameModel) {
@@ -84,11 +86,35 @@ export class Factory {
 			.withComponent(new PlayerMovementComponent(Attributes.PLAYER_MOVEMENT, gameModel))
 			.withComponent(new PlayerWeaponComponent())
 			.withAttribute(Attributes.ATTACK_FREQUENCY, 5*gameModel.baseAttackFrequency)
-			.withAttribute(Attributes.MAX_VELOCITY, gameModel.baseVelocity)
-			.withAttribute(Attributes.MAX_ACCELERATION, gameModel.baseAcceleration)
+			.withAttribute(Attributes.MAX_VELOCITY, 5*gameModel.baseVelocity)
+			.withAttribute(Attributes.MAX_ACCELERATION, 5*5*gameModel.baseAcceleration)
 			.withParent(scene.stage)
 			.buildInto(player);
 	}
+
+	addEnemy(scene: ECSA.Scene, gameModel: GameModel) {
+		let enemy = new ECSA.Graphics(Attributes.ENEMY);
+		enemy.beginFill(0xE56987);
+		enemy.drawPolygon([-10, -10, -10, 10, 15, 0]);
+		enemy.endFill();
+		gameModel.addEnemy(enemy)
+		// let xpos = Math.random()*WIDTH
+		// let ypos = Math.random()*HEIGHT
+		let xpos = 100
+		let ypos = 100
+
+		new ECSA.Builder(scene)
+			.scale(Factory.globalScale)
+			.localPos(xpos, ypos)
+			// .asSprite(this.createTexture(model.getSpriteInfo(Names.PADDLE)), Names.PADDLE)
+			.withComponent(new EnemyMovementComponent(Attributes.ENEMY_MOVEMENT, gameModel))
+			// .withComponent(new PlayerWeaponComponent())
+			.withAttribute(Attributes.ATTACK_FREQUENCY, gameModel.baseAttackFrequency)
+			.withAttribute(Attributes.MAX_VELOCITY, gameModel.baseVelocity)
+			.withAttribute(Attributes.MAX_ACCELERATION, gameModel.baseAcceleration)
+			.withParent(scene.stage)
+			.buildInto(enemy);
+ 	}
 
 	addUI(scene: ECSA.Scene, gameModel: GameModel) {
 		new ECSA.Builder(scene)

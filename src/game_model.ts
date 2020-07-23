@@ -3,9 +3,10 @@ import * as ECSA from '../libs/pixi-component';
 
 export class GameModel {
 	/// Static
-	baseVelocity: number = 500
+	baseVelocity: number = 100
 	baseAcceleration: number = this.baseVelocity/10
 	baseAttackFrequency: number = 1
+	baseNumOfEnemies: number = 1
 	///
 	
 	gameSpeed: number = 10
@@ -34,6 +35,10 @@ export class GameModel {
 
 	public get projectiles(): Map<number, ECSA.Container> {
 		return this._projectiles
+	}
+
+	public get enemies(): Map<number, ECSA.Container> {
+		return this._enemies
 	}
 
 	public set walls(walls: Array<ECSA.Container>) {
