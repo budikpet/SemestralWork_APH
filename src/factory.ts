@@ -5,6 +5,7 @@ import { Attributes, HEIGHT, WALLS_SIZE, WIDTH, Tags, CharacterTypes } from './c
 import { PlayerWeaponComponent, EnemyWeaponComponent } from './components/weapon_component';
 import { GameModel } from './game_model';
 import { CollisionManagerComponent } from './components/collision_manager_component';
+import { DeathCheckerComponent } from './components/death_checker_component';
 
 /**
  * Creates all in-game objects.
@@ -22,6 +23,7 @@ export class Factory {
 		scene.addGlobalComponent(new ECSA.KeyInputComponent());
 		scene.addGlobalComponent(new ECSA.PointerInputComponent(false, true, true, true))
 		scene.addGlobalComponent(new CollisionManagerComponent(gameModel))
+		scene.addGlobalComponent(new DeathCheckerComponent(gameModel))
 
 		this.addWalls(scene, gameModel)
 		this.addPlayer(scene, gameModel)
@@ -90,6 +92,7 @@ export class Factory {
 			.withAttribute(Attributes.MAX_ACCELERATION, 5*5*gameModel.baseAcceleration)
 			.withAttribute(Attributes.PROJECTILE_COLOR, 0x43E214)
 			.withAttribute(Attributes.CHARACTER_TYPE, CharacterTypes.PLAYER)
+			.withAttribute(Attributes.HP, 5)
 			.withParent(scene.stage)
 			.buildInto(player);
 	}
@@ -115,6 +118,7 @@ export class Factory {
 			.withAttribute(Attributes.MAX_VELOCITY, gameModel.baseVelocity)
 			.withAttribute(Attributes.MAX_ACCELERATION, gameModel.baseAcceleration)
 			.withAttribute(Attributes.CHARACTER_TYPE, CharacterTypes.ENEMY)
+			.withAttribute(Attributes.HP, 2)
 			.withParent(scene.stage)
 			.buildInto(enemy);
  	}

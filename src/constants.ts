@@ -15,6 +15,7 @@ export enum Attributes {
 	ATTACK_FREQUENCY = "attackFrequency",
 	DYNAMICS = "dynamics",
 	CHARACTER_TYPE = "characterType",
+	HP = "healthPoints",							// How many projectiles can a character take
 
 	WALL_TOP = "wallTop",
 	WALL_BOTTOM = "wallBottom",

@@ -49,7 +49,7 @@ export class CollisionManagerComponent extends ECSA.Component {
 				if (this.testIntersection(projectile.getBounds(), this.gameModel.player.getBounds())) {
 					let data = new ProjectileCollisionMsg(this.gameModel.player, projectile)
 					this.sendMessage(Messages.PROJECTILE_COLLISION, data)
-					console.log("Projectile-player")
+
 				}
 			} else if(projectileOwnerType === CharacterTypes.PLAYER) {
 				// Projectile-enemy collision
@@ -57,7 +57,6 @@ export class CollisionManagerComponent extends ECSA.Component {
 					if (this.testIntersection(projectile.getBounds(), enemy.getBounds())) {
 						let data = new ProjectileCollisionMsg(enemy, projectile)
 						this.sendMessage(Messages.PROJECTILE_COLLISION, data)
-						console.log("Projectile-enemy")
 					}
 				}
 			}		

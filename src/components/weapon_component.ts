@@ -19,7 +19,7 @@ abstract class WeaponComponent extends ECSA.Component {
 	protected factory: Factory;
 	protected gameModel: GameModel;
 	protected shouldFire: boolean = false;
-	protected lastShot: number = -1;
+	protected lastShot: number = -1000;
 	protected attackFrequency: number;
 
 	onInit() {
@@ -111,8 +111,8 @@ abstract class WeaponComponent extends ECSA.Component {
 }
 
 export class EnemyWeaponComponent extends WeaponComponent {
-	
-	
+	i: number;
+
 	protected calcForce(delta: number): ECSA.Vector {
 		let targetDynamics: Dynamics = this.gameModel.player.getAttribute(Attributes.DYNAMICS)
 
