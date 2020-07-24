@@ -2,7 +2,7 @@ import * as ECSA from '../libs/pixi-component';
 import * as PIXI from 'pixi.js';
 import { PlayerMovementComponent, ProjectileMovementComponent, EnemyMovementComponent } from './components/movement_component';
 import { Attributes, HEIGHT, WALLS_SIZE, WIDTH } from './constants';
-import { PlayerWeaponComponent, EnemyWeaponComponent } from './components/cannon_component';
+import { PlayerWeaponComponent, EnemyWeaponComponent } from './components/weapon_component';
 import { GameModel } from './game_model';
 import { CollisionManagerComponent } from './components/collision_manager_component';
 
