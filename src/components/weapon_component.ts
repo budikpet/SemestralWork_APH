@@ -5,6 +5,8 @@ import { Attributes, Assets, Messages } from "../constants";
 import { Factory } from "../factory";
 import { GameModel } from "../game_model";
 import { checkTime } from "../utils/functions";
+import Dynamics from "../utils/dynamics";
+import { ArmatureDisplayData } from "../../libs/dragonbones/model/display-data";
 
 
 
@@ -112,9 +114,14 @@ export class EnemyWeaponComponent extends WeaponComponent {
 	
 	
 	protected calcForce(delta: number): ECSA.Vector {
-		let target = new ECSA.Vector(this.gameModel.player.position.x, this.gameModel.player.position.y)
+		let targetDynamics: Dynamics = this.gameModel.player.getAttribute(Attributes.DYNAMICS)
+
+		let targetPos = new ECSA.Vector(this.gameModel.player.position.x, this.gameModel.player.position.y)
 		let ownerPos = new ECSA.Vector(this.owner.position.x, this.owner.position.y)
-		let force = this.math.seek(target, ownerPos, new ECSA.Vector(0, 0), 10000, 1)
+		let ownerMaxVelocity: number = this.owner.getAttribute(Attributes.MAX_VELOCITY)
+		let force = this.math.seek(targetPos, ownerPos, new ECSA.Vector(0, 0), 10000, 1)
+
+		this.shouldFire = true
 
 		return force
 	}
@@ -147,8 +154,9 @@ export class PlayerWeaponComponent extends WeaponComponent {
 	}
 
 	protected calcForce(delta: number): ECSA.Vector {
+		let ownerMaxVelocity: number = this.owner.getAttribute(Attributes.MAX_VELOCITY)
 		let ownerPos = new ECSA.Vector(this.owner.position.x, this.owner.position.y)
-		let force = this.math.seek(this.mousePos, ownerPos, new ECSA.Vector(0, 0), 10000, 1)
+		let force = this.math.seek(this.mousePos, ownerPos, new ECSA.Vector(0, 0), ownerMaxVelocity, 1)
 
 		return force
 	}

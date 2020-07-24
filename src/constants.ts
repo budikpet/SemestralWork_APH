@@ -12,6 +12,7 @@ export enum Attributes {
 	MAX_VELOCITY = "velocity",
 	MAX_ACCELERATION = "acceleration",
 	ATTACK_FREQUENCY = "attackFrequency",
+	DYNAMICS = "dynamics",
 
 	WALL_TOP = "wallTop",
 	WALL_BOTTOM = "wallBottom",
@@ -20,16 +21,14 @@ export enum Attributes {
 	WALL_REPULSIVE_FORCE = "wallRepulsiveForce",
 
 	PLAYER = "player",
-	PLAYER_MOVEMENT = "playerMovement",
-
 	ENEMY = "enemy",
-	ENEMY_MOVEMENT = "enemyMovement",
 
 	FACTORY = "factory",
 	GAME_MODEL = "gameModel",
 
 	PROJECTILE = "projectile",
-	PROJECTILE_MOVEMENT = "projectileMovement"
+	PROJECTILE_OWNER = "projectileOwner",
+	PROJECTILE_COLOR = "projectileColor"
 }
 
 export enum States {
