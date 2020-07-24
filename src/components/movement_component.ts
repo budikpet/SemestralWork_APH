@@ -85,6 +85,12 @@ export class EnemyMovementComponent extends MovementComponent {
 		this.dynamics.velocity = new ECSA.Vector(1, 1)
 	}
 
+	onWallCollision(collisionMsg: WallCollisionMsg) {
+		super.onWallCollision(collisionMsg)
+		let repulsiveForce: ECSA.Vector = collisionMsg.wall.getAttribute(Attributes.WALL_REPULSIVE_FORCE)
+		this.wanderTarget = this.wanderTarget.add(repulsiveForce.multiply(10))
+	}
+
 	protected calcForce(delta: number): ECSA.Vector {
 		let res = this.math.wander(this.dynamics.velocity, this.wanderTarget, 20, 10, 0.4, delta)
 		this.wanderTarget = res[1]
