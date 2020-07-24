@@ -1,15 +1,25 @@
 import * as ECSA from '../../libs/pixi-component';
 import * as PIXI from 'pixi.js';
 import { GameModel } from '../game_model';
-import { Messages, Attributes } from '../constants';
+import { Messages, Attributes, CharacterTypes } from '../constants';
 
 export class WallCollisionMsg {
-	public character: ECSA.Container
+	public gameObject: ECSA.Container
 	public wall: ECSA.Container
 
-	constructor(character, wall) {
-		this.character = character
+	constructor(gameObject, wall) {
+		this.gameObject = gameObject
 		this.wall = wall
+	}
+}
+
+export class ProjectileCollisionMsg {
+	public character: ECSA.Container
+	public projectile: ECSA.Container
+
+	constructor(character, projectile) {
+		this.character = character
+		this.projectile = projectile
 	}
 }
 
@@ -33,6 +43,24 @@ export class CollisionManagerComponent extends ECSA.Component {
 	protected checkProjectileCollisions() {
 		for(let [, projectile] of this.gameModel.projectiles) {
 			// Projectile-character collision
+			let projectileOwnerType: CharacterTypes = projectile.getAttribute(Attributes.PROJECTILE_OWNER_TYPE)
+			if(projectileOwnerType === CharacterTypes.ENEMY) {
+				// Projectile-player collision
+				if (this.testIntersection(projectile.getBounds(), this.gameModel.player.getBounds())) {
+					let data = new ProjectileCollisionMsg(this.gameModel.player, projectile)
+					this.sendMessage(Messages.PROJECTILE_COLLISION, data)
+					console.log("Projectile-player")
+				}
+			} else if(projectileOwnerType === CharacterTypes.PLAYER) {
+				// Projectile-enemy collision
+				for(let [, enemy] of this.gameModel.enemies) {
+					if (this.testIntersection(projectile.getBounds(), enemy.getBounds())) {
+						let data = new ProjectileCollisionMsg(enemy, projectile)
+						this.sendMessage(Messages.PROJECTILE_COLLISION, data)
+						console.log("Projectile-enemy")
+					}
+				}
+			}		
 
 			// Projectile-wall collision
 			for(let wall of this.gameModel.walls) {

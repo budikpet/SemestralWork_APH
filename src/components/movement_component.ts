@@ -40,7 +40,7 @@ abstract class MovementComponent extends DynamicsComponent {
 	onMessage(msg: ECSA.Message) {
 		if(msg.action === Messages.WALL_COLLISION) {
 			let collisionMsg: WallCollisionMsg = msg.data
-			if(collisionMsg.character.id === this.owner.id) {
+			if(collisionMsg.gameObject.id === this.owner.id) {
 				this.onWallCollision(collisionMsg)
 			}
 		}

@@ -2,6 +2,7 @@ export enum Messages {
 	CREATE_PROJECTILE = "create_projectile",
 
 	WALL_COLLISION = "wall_collision",
+	PROJECTILE_COLLISION = "projectile_collision",
 
 }
 
@@ -13,6 +14,7 @@ export enum Attributes {
 	MAX_ACCELERATION = "acceleration",
 	ATTACK_FREQUENCY = "attackFrequency",
 	DYNAMICS = "dynamics",
+	CHARACTER_TYPE = "characterType",
 
 	WALL_TOP = "wallTop",
 	WALL_BOTTOM = "wallBottom",
@@ -27,13 +29,19 @@ export enum Attributes {
 	GAME_MODEL = "gameModel",
 
 	PROJECTILE = "projectile",
-	PROJECTILE_OWNER = "projectileOwner",
+	PROJECTILE_OWNER_TYPE = "projectileOwnerType",
 	PROJECTILE_COLOR = "projectileColor"
 }
 
 export enum States {
 	ALIVE = "alive",
 	DEAD = "dead"
+}
+
+export enum CharacterTypes {
+	PLAYER,
+	ENEMY,
+	NEUTRAL
 }
 
 export const WALLS_SIZE = 25

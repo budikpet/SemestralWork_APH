@@ -1,7 +1,7 @@
 import * as ECSA from '../libs/pixi-component';
 import * as PIXI from 'pixi.js';
 import { PlayerMovementComponent, ProjectileMovementComponent, EnemyMovementComponent } from './components/movement_component';
-import { Attributes, HEIGHT, WALLS_SIZE, WIDTH } from './constants';
+import { Attributes, HEIGHT, WALLS_SIZE, WIDTH, Tags, CharacterTypes } from './constants';
 import { PlayerWeaponComponent, EnemyWeaponComponent } from './components/weapon_component';
 import { GameModel } from './game_model';
 import { CollisionManagerComponent } from './components/collision_manager_component';
@@ -89,6 +89,7 @@ export class Factory {
 			.withAttribute(Attributes.MAX_VELOCITY, 5*gameModel.baseVelocity)
 			.withAttribute(Attributes.MAX_ACCELERATION, 5*5*gameModel.baseAcceleration)
 			.withAttribute(Attributes.PROJECTILE_COLOR, 0x43E214)
+			.withAttribute(Attributes.CHARACTER_TYPE, CharacterTypes.PLAYER)
 			.withParent(scene.stage)
 			.buildInto(player);
 	}
@@ -113,6 +114,7 @@ export class Factory {
 			.withAttribute(Attributes.ATTACK_FREQUENCY, gameModel.baseAttackFrequency)
 			.withAttribute(Attributes.MAX_VELOCITY, gameModel.baseVelocity)
 			.withAttribute(Attributes.MAX_ACCELERATION, gameModel.baseAcceleration)
+			.withAttribute(Attributes.CHARACTER_TYPE, CharacterTypes.ENEMY)
 			.withParent(scene.stage)
 			.buildInto(enemy);
  	}
@@ -145,9 +147,9 @@ export class Factory {
 			.localPos(character.x, character.y)
 			.anchor(0.5)
 			.withComponent(new ProjectileMovementComponent(Attributes.DYNAMICS, gameModel, character.rotation))
-			.withAttribute(Attributes.MAX_VELOCITY, gameModel.baseVelocity*2.25)
-			.withAttribute(Attributes.MAX_ACCELERATION, gameModel.baseAcceleration*2.75)
-			.withAttribute(Attributes.PROJECTILE_OWNER, character.id)
+			.withAttribute(Attributes.MAX_VELOCITY, gameModel.baseVelocity*5)
+			.withAttribute(Attributes.MAX_ACCELERATION, gameModel.baseAcceleration*6)
+			.withAttribute(Attributes.PROJECTILE_OWNER_TYPE, character.getAttribute(Attributes.CHARACTER_TYPE))
 			.withParent(character.scene.stage)
 			.buildInto(projectile)
 	}
