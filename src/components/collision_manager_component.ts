@@ -29,9 +29,9 @@ export class ProjectileCollisionMsg {
 export class CollisionManagerComponent extends ECSA.Component {
 	protected gameModel: GameModel;
 
-	constructor(gameModel: GameModel) {
-		super()
-		this.gameModel = gameModel
+	onInit() {
+		super.onInit()
+		this.gameModel = this.scene.getGlobalAttribute(Attributes.GAME_MODEL)
 	}
 
 	onUpdate() {

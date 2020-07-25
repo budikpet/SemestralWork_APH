@@ -23,6 +23,8 @@ abstract class WeaponComponent extends ECSA.Component {
 	protected attackFrequency: number;
 
 	onInit() {
+		super.onInit()
+		this.subscribe(Messages.DEATH)
 		this.factory = this.scene.getGlobalAttribute<Factory>(Attributes.FACTORY)
 		this.gameModel = this.scene.getGlobalAttribute<GameModel>(Attributes.GAME_MODEL)
 
@@ -30,6 +32,12 @@ abstract class WeaponComponent extends ECSA.Component {
 
 		if(this.attackFrequency == null) {
 			this.attackFrequency = this.gameModel.baseAttackFrequency
+		}
+	}
+
+	onMessage(msg: ECSA.Message) {
+		if(msg.action === Messages.DEATH) {
+			this.finish()
 		}
 	}
 

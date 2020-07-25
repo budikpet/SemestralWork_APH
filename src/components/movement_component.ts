@@ -4,6 +4,7 @@ import * as ECSA from '../../libs/pixi-component';
 import { Attributes, Messages } from "../constants";
 import { GameModel } from "../game_model";
 import { WallCollisionMsg } from "./collision_manager_component";
+import { DeathMessage } from "./death_checker_component";
 
 
 
@@ -23,7 +24,7 @@ abstract class MovementComponent extends DynamicsComponent {
 
 	onInit() {
 		super.onInit()
-		this.subscribe(Messages.WALL_COLLISION)
+		this.subscribe(Messages.WALL_COLLISION, Messages.DEATH)
 
 		this.maxVelocity = this.owner.getAttribute(Attributes.MAX_VELOCITY)
 		this.maxAcceleration = this.owner.getAttribute(Attributes.MAX_ACCELERATION)
@@ -42,6 +43,11 @@ abstract class MovementComponent extends DynamicsComponent {
 			let collisionMsg: WallCollisionMsg = msg.data
 			if(collisionMsg.gameObject.id === this.owner.id) {
 				this.onWallCollision(collisionMsg)
+			}
+		} else if(msg.action === Messages.DEATH) {
+			let deathMsg: DeathMessage = msg.data
+			if(this.owner.id === deathMsg.id) {
+				this.finish()
 			}
 		}
 	}

@@ -1,7 +1,7 @@
 import * as ECSA from '../libs/pixi-component';
 import * as PIXI from 'pixi.js';
 import { PlayerMovementComponent, ProjectileMovementComponent, EnemyMovementComponent } from './components/movement_component';
-import { Attributes, HEIGHT, WALLS_SIZE, WIDTH, Tags, CharacterTypes } from './constants';
+import { Attributes, HEIGHT, WALLS_SIZE, WIDTH, CharacterTypes } from './constants';
 import { PlayerWeaponComponent, EnemyWeaponComponent } from './components/weapon_component';
 import { GameModel } from './game_model';
 import { CollisionManagerComponent } from './components/collision_manager_component';
@@ -22,8 +22,8 @@ export class Factory {
 		
 		scene.addGlobalComponent(new ECSA.KeyInputComponent());
 		scene.addGlobalComponent(new ECSA.PointerInputComponent(false, true, true, true))
-		scene.addGlobalComponent(new CollisionManagerComponent(gameModel))
-		scene.addGlobalComponent(new DeathCheckerComponent(gameModel))
+		scene.addGlobalComponent(new CollisionManagerComponent())
+		scene.addGlobalComponent(new DeathCheckerComponent())
 
 		this.addWalls(scene, gameModel)
 		this.addPlayer(scene, gameModel)
@@ -121,7 +121,23 @@ export class Factory {
 			.withAttribute(Attributes.HP, 2)
 			.withParent(scene.stage)
 			.buildInto(enemy);
- 	}
+	}
+
+	removeCharacter(character: ECSA.Container, gameModel: GameModel) {
+		let type: CharacterTypes = character.getAttribute(Attributes.CHARACTER_TYPE)
+
+		switch(type) {
+			case CharacterTypes.ENEMY: {
+				gameModel.removeEnemy(character.id)
+				character.remove()
+				break
+			}
+			case CharacterTypes.PLAYER: {
+				character.remove()
+				break
+			}
+		}
+	}
 
 	addUI(scene: ECSA.Scene, gameModel: GameModel) {
 		new ECSA.Builder(scene)
