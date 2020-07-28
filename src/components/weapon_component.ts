@@ -5,6 +5,7 @@ import { Factory } from "../factory";
 import { GameModel } from "../game_model";
 import { checkTime } from "../utils/functions";
 import Dynamics from "../utils/dynamics";
+import { DeathMessage } from './death_checker_component';
 
 /**
  * Base class for all weapon handling components. Handles rotation of the character and weapon fireing.
@@ -33,7 +34,10 @@ abstract class WeaponComponent extends ECSA.Component {
 
 	onMessage(msg: ECSA.Message) {
 		if(msg.action === Messages.DEATH) {
-			this.finish()
+			let deathMsg: DeathMessage = msg.data
+			if(this.owner.id === deathMsg.id) {
+				this.finish()
+			}
 		}
 	}
 

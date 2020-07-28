@@ -35,12 +35,13 @@ export enum Attributes {
 
 	PROJECTILE = "projectile",
 	PROJECTILE_OWNER_TYPE = "projectileOwnerType",
-	PROJECTILE_COLOR = "projectileColor"
+	PROJECTILE_COLOR = "projectileColor",
+	PROJECTILE_MAX_VELOCITY = "projectileMaxVelocity"
 }
 
 export enum States {
-	ALIVE = "alive",
-	DEAD = "dead"
+	ALIVE = 0,
+	DEAD = 1
 }
 
 export enum CharacterTypes {

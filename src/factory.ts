@@ -1,7 +1,7 @@
 import * as ECSA from '../libs/pixi-component';
 import * as PIXI from 'pixi.js';
 import { PlayerMovementComponent, ProjectileMovementComponent, EnemyMovementComponent } from './components/movement_component';
-import { Attributes, HEIGHT, WALLS_SIZE, WIDTH, CharacterTypes, Messages } from './constants';
+import { Attributes, HEIGHT, WALLS_SIZE, WIDTH, CharacterTypes, Messages, States } from './constants';
 import { PlayerWeaponComponent, EnemyWeaponComponent } from './components/weapon_component';
 import { GameModel } from './game_model';
 import { CollisionManagerComponent } from './components/collision_manager_component';
@@ -87,14 +87,16 @@ export class Factory {
 			.scale(Factory.globalScale)
 			.relativePos(0.5, 0.5)
 			// .asSprite(this.createTexture(model.getSpriteInfo(Names.PADDLE)), Names.PADDLE)
-			.withComponent(new PlayerMovementComponent(Attributes.DYNAMICS, gameModel))
-			.withComponent(new PlayerWeaponComponent())
 			.withAttribute(Attributes.ATTACK_FREQUENCY, 5*gameModel.baseAttackFrequency)
-			.withAttribute(Attributes.MAX_VELOCITY, 5*gameModel.baseVelocity)
-			.withAttribute(Attributes.MAX_ACCELERATION, 5*5*gameModel.baseAcceleration)
+			.withAttribute(Attributes.MAX_VELOCITY, 10*gameModel.baseVelocity)
+			.withAttribute(Attributes.MAX_ACCELERATION, 100*gameModel.baseAcceleration)
 			.withAttribute(Attributes.PROJECTILE_COLOR, 0x43E214)
+			.withAttribute(Attributes.PROJECTILE_MAX_VELOCITY, 200*gameModel.baseVelocity)
 			.withAttribute(Attributes.CHARACTER_TYPE, CharacterTypes.PLAYER)
 			.withAttribute(Attributes.HP, 5)
+			.withState(States.ALIVE)
+			.withComponent(new PlayerMovementComponent(Attributes.DYNAMICS, gameModel))
+			.withComponent(new PlayerWeaponComponent())
 			.withParent(scene.stage)
 			.buildInto(player);
 	}
@@ -106,19 +108,17 @@ export class Factory {
 		enemy.endFill();
 		gameModel.addEnemy(enemy)
 
-		// Random initial velocity
-		let dynamics = new Dynamics(new ECSA.Vector(randomFromInterval(1, gameModel.baseVelocity), randomFromInterval(1, gameModel.baseVelocity)))
-
 		new ECSA.Builder(scene)
 			.scale(Factory.globalScale)
 			.localPos(position.x, position.y)
 			// .asSprite(this.createTexture(model.getSpriteInfo(Names.PADDLE)), Names.PADDLE)
-			.withAttribute(Attributes.ATTACK_FREQUENCY, gameModel.baseAttackFrequency)
+			.withAttribute(Attributes.ATTACK_FREQUENCY, gameModel.baseAttackFrequency*1/4)
 			.withAttribute(Attributes.MAX_VELOCITY, gameModel.baseVelocity)
 			.withAttribute(Attributes.MAX_ACCELERATION, gameModel.baseAcceleration)
 			.withAttribute(Attributes.CHARACTER_TYPE, CharacterTypes.ENEMY)
 			.withAttribute(Attributes.HP, 2)
-			.withAttribute(Attributes.DYNAMICS, dynamics)
+			.withAttribute(Attributes.PROJECTILE_MAX_VELOCITY, 2*gameModel.baseVelocity)
+			.withState(States.ALIVE)
 			.withComponent(new EnemyMovementComponent(Attributes.DYNAMICS, gameModel))
 			.withComponent(new EnemyWeaponComponent())
 			.withParent(scene.stage)
@@ -169,6 +169,8 @@ export class Factory {
 
 	addProjectile(character: ECSA.Container, gameModel: GameModel) {
 		let color: number = character.getAttribute(Attributes.PROJECTILE_COLOR)
+		var velocity: number = character.getAttribute(Attributes.PROJECTILE_MAX_VELOCITY)
+		velocity = (velocity != null) ? velocity : gameModel.baseVelocity
 		let projectile = new ECSA.Graphics(Attributes.PROJECTILE);
 		projectile.beginFill((color != null) ? color : 0xFFFFED);
 		projectile.drawRect(0, 0, 10, 5)
@@ -179,10 +181,11 @@ export class Factory {
 		new ECSA.Builder(character.scene)
 			.localPos(character.x, character.y)
 			.anchor(0.5)
-			.withComponent(new ProjectileMovementComponent(Attributes.DYNAMICS, gameModel, character.rotation))
-			.withAttribute(Attributes.MAX_VELOCITY, gameModel.baseVelocity*5)
-			.withAttribute(Attributes.MAX_ACCELERATION, gameModel.baseAcceleration*6)
+			.withAttribute(Attributes.MAX_VELOCITY, velocity)
+			.withAttribute(Attributes.MAX_ACCELERATION, velocity)
 			.withAttribute(Attributes.PROJECTILE_OWNER_TYPE, character.getAttribute(Attributes.CHARACTER_TYPE))
+			.withComponent(new ProjectileMovementComponent(Attributes.DYNAMICS, gameModel, character.rotation))
+			.withState(States.ALIVE)
 			.withParent(character.scene.stage)
 			.buildInto(projectile)
 	}

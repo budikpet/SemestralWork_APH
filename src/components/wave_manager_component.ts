@@ -30,7 +30,7 @@ export class WaveManagerComponent extends ECSA.Component {
 			this.waveNum++
 			this.requestedNewWave = false
 			this.enemiesAddedCurrWave = 0
-			this.enemiesToAddCurrWave = this.gameModel.baseNumOfEnemies + 3*this.waveNum
+			this.enemiesToAddCurrWave = this.gameModel.baseNumOfEnemies + 2*this.waveNum
 		}
 	}
 
@@ -46,7 +46,8 @@ export class WaveManagerComponent extends ECSA.Component {
 				this.enemiesAddedCurrWave += batchSize
 
 				for(let i = 0; i < batchSize; i++) {
-					let spawnIndex = randomFromInterval(0, this.gameModel.spawnpoints.length - 1)
+					// let spawnIndex = randomFromInterval(0, this.gameModel.spawnpoints.length - 1)
+					let spawnIndex = 0
 					let pos = this.gameModel.spawnpoints[spawnIndex]
 					this.factory.addEnemy(this.scene, this.gameModel, pos)
 				}

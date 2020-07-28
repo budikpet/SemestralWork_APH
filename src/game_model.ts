@@ -4,7 +4,7 @@ import { WIDTH, WALLS_SIZE, HEIGHT } from './constants';
 
 export class GameModel {
 	/// Static
-	baseVelocity: number = 100
+	baseVelocity: number = 50
 	baseAcceleration: number = this.baseVelocity/10
 	baseAttackFrequency: number = 1
 	baseNumOfEnemies: number = 7
