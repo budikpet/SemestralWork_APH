@@ -1,7 +1,6 @@
 import * as ECSA from '../libs/pixi-component';
 import * as PIXI from 'pixi.js';
 import { WIDTH, WALLS_SIZE, HEIGHT, DOOR_WIDTH as DOOR_LONG_SIDE, DOOR_HEIGHT as DOOR_SHORT_SIDE } from './constants';
-import { PixiArmatureDisplay } from '../libs/dragonbones/pixi-armature-display';
 
 type Door = [PIXI.Point, PIXI.Point]
 
@@ -36,9 +35,9 @@ export class GameModel {
 
 		this._spawnpoints = [
 			[topDoorStart, new PIXI.Point(topDoorStart.x + DOOR_LONG_SIDE, topDoorStart.y + DOOR_SHORT_SIDE)],
-			[rightDoorStart, new PIXI.Point(rightDoorStart.x + DOOR_LONG_SIDE, rightDoorStart.y + DOOR_SHORT_SIDE)],
+			[rightDoorStart, new PIXI.Point(rightDoorStart.x + DOOR_SHORT_SIDE, rightDoorStart.y + DOOR_LONG_SIDE)],
 			[bottomDoorStart, new PIXI.Point(bottomDoorStart.x + DOOR_LONG_SIDE, bottomDoorStart.y + DOOR_SHORT_SIDE)],
-			[leftDoorStart, new PIXI.Point(leftDoorStart.x + DOOR_LONG_SIDE, leftDoorStart.y + DOOR_SHORT_SIDE)]
+			[leftDoorStart, new PIXI.Point(leftDoorStart.x + DOOR_SHORT_SIDE, leftDoorStart.y + DOOR_LONG_SIDE)]
 		]
 	}
 
