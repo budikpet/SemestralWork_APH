@@ -1,12 +1,11 @@
-import DynamicsComponent from "../utils/dynamics_component";
-import { Path, PathContext, SteeringMath } from '../../libs/pixi-math';
+import { SteeringMath } from '../../libs/pixi-math';
 import * as ECSA from '../../libs/pixi-component';
 import { Attributes, Assets, Messages } from "../constants";
 import { Factory } from "../factory";
 import { GameModel } from "../game_model";
 import { checkTime } from "../utils/functions";
-
-
+import Dynamics from "../utils/dynamics";
+import { DeathMessage } from './death_checker_component';
 
 /**
  * Base class for all weapon handling components. Handles rotation of the character and weapon fireing.
@@ -17,10 +16,12 @@ abstract class WeaponComponent extends ECSA.Component {
 	protected factory: Factory;
 	protected gameModel: GameModel;
 	protected shouldFire: boolean = false;
-	protected lastShot: number = -1;
+	protected lastShot: number = -1000;
 	protected attackFrequency: number;
 
 	onInit() {
+		super.onInit()
+		this.subscribe(Messages.DEATH)
 		this.factory = this.scene.getGlobalAttribute<Factory>(Attributes.FACTORY)
 		this.gameModel = this.scene.getGlobalAttribute<GameModel>(Attributes.GAME_MODEL)
 
@@ -28,6 +29,15 @@ abstract class WeaponComponent extends ECSA.Component {
 
 		if(this.attackFrequency == null) {
 			this.attackFrequency = this.gameModel.baseAttackFrequency
+		}
+	}
+
+	onMessage(msg: ECSA.Message) {
+		if(msg.action === Messages.DEATH) {
+			let deathMsg: DeathMessage = msg.data
+			if(this.owner.id === deathMsg.id) {
+				this.finish()
+			}
 		}
 	}
 
@@ -108,6 +118,23 @@ abstract class WeaponComponent extends ECSA.Component {
 	protected abstract calcForce(delta: number): ECSA.Vector;
 }
 
+export class EnemyWeaponComponent extends WeaponComponent {
+	i: number;
+
+	protected calcForce(delta: number): ECSA.Vector {
+		let targetDynamics: Dynamics = this.gameModel.player.getAttribute(Attributes.DYNAMICS)
+
+		let targetPos = new ECSA.Vector(this.gameModel.player.position.x, this.gameModel.player.position.y)
+		let ownerPos = new ECSA.Vector(this.owner.position.x, this.owner.position.y)
+		let ownerMaxVelocity: number = this.owner.getAttribute(Attributes.MAX_VELOCITY)
+		let force = this.math.seek(targetPos, ownerPos, new ECSA.Vector(0, 0), 10000, 1)
+
+		this.shouldFire = true
+
+		return force
+	}
+}
+
 export class PlayerWeaponComponent extends WeaponComponent {
 	_inputComponent: ECSA.KeyInputComponent
 	mousePos: ECSA.Vector = new ECSA.Vector(0, 0)
@@ -135,8 +162,9 @@ export class PlayerWeaponComponent extends WeaponComponent {
 	}
 
 	protected calcForce(delta: number): ECSA.Vector {
+		let ownerMaxVelocity: number = this.owner.getAttribute(Attributes.MAX_VELOCITY)
 		let ownerPos = new ECSA.Vector(this.owner.position.x, this.owner.position.y)
-		let force = this.math.seek(this.mousePos, ownerPos, new ECSA.Vector(0, 0), 10000, 1)
+		let force = this.math.seek(this.mousePos, ownerPos, new ECSA.Vector(0, 0), ownerMaxVelocity, 1)
 
 		return force
 	}

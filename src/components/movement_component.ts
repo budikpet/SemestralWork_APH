@@ -4,6 +4,7 @@ import * as ECSA from '../../libs/pixi-component';
 import { Attributes, Messages } from "../constants";
 import { GameModel } from "../game_model";
 import { WallCollisionMsg } from "./collision_manager_component";
+import { DeathMessage } from "./death_checker_component";
 
 
 
@@ -23,7 +24,7 @@ abstract class MovementComponent extends DynamicsComponent {
 
 	onInit() {
 		super.onInit()
-		this.subscribe(Messages.WALL_COLLISION)
+		this.subscribe(Messages.WALL_COLLISION, Messages.DEATH)
 
 		this.maxVelocity = this.owner.getAttribute(Attributes.MAX_VELOCITY)
 		this.maxAcceleration = this.owner.getAttribute(Attributes.MAX_ACCELERATION)
@@ -40,8 +41,13 @@ abstract class MovementComponent extends DynamicsComponent {
 	onMessage(msg: ECSA.Message) {
 		if(msg.action === Messages.WALL_COLLISION) {
 			let collisionMsg: WallCollisionMsg = msg.data
-			if(collisionMsg.character.id === this.owner.id) {
+			if(collisionMsg.gameObject.id === this.owner.id) {
 				this.onWallCollision(collisionMsg)
+			}
+		} else if(msg.action === Messages.DEATH) {
+			let deathMsg: DeathMessage = msg.data
+			if(this.owner.id === deathMsg.id) {
+				this.finish()
 			}
 		}
 	}
@@ -72,6 +78,31 @@ abstract class MovementComponent extends DynamicsComponent {
 	}
 
 	protected abstract calcForce(delta: number): ECSA.Vector;
+}
+
+/**
+ * Implements enemy movement as wonder steering.
+ */
+export class EnemyMovementComponent extends MovementComponent {
+	wanderTarget: ECSA.Vector = new ECSA.Vector(0, 0)
+
+	onInit() {
+		super.onInit()
+		this.dynamics.velocity = new ECSA.Vector(1, 1)
+	}
+
+	onWallCollision(collisionMsg: WallCollisionMsg) {
+		super.onWallCollision(collisionMsg)
+		let repulsiveForce: ECSA.Vector = collisionMsg.wall.getAttribute(Attributes.WALL_REPULSIVE_FORCE)
+		this.wanderTarget = this.wanderTarget.add(repulsiveForce.multiply(10))
+	}
+
+	protected calcForce(delta: number): ECSA.Vector {
+		let res = this.math.wander(this.dynamics.velocity, this.wanderTarget, 20, 10, 0.4, delta)
+		this.wanderTarget = res[1]
+		return res[0]
+	}
+
 }
 
 /**

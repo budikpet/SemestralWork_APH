@@ -1,10 +1,12 @@
 import * as ECSA from '../libs/pixi-component';
 import * as PIXI from 'pixi.js';
-import { PlayerMovementComponent, ProjectileMovementComponent } from './components/movement_component';
-import { Attributes, HEIGHT, WALLS_SIZE, WIDTH } from './constants';
-import { PlayerWeaponComponent } from './components/cannon_component';
+import { PlayerMovementComponent, ProjectileMovementComponent, EnemyMovementComponent } from './components/movement_component';
+import { Attributes, HEIGHT, WALLS_SIZE, WIDTH, CharacterTypes, Messages, States } from './constants';
+import { PlayerWeaponComponent, EnemyWeaponComponent } from './components/weapon_component';
 import { GameModel } from './game_model';
 import { CollisionManagerComponent } from './components/collision_manager_component';
+import { DeathCheckerComponent } from './components/death_checker_component';
+import { WaveManagerComponent } from './components/wave_manager_component';
 
 /**
  * Creates all in-game objects.
@@ -21,7 +23,9 @@ export class Factory {
 		
 		scene.addGlobalComponent(new ECSA.KeyInputComponent());
 		scene.addGlobalComponent(new ECSA.PointerInputComponent(false, true, true, true))
-		scene.addGlobalComponent(new CollisionManagerComponent(gameModel))
+		scene.addGlobalComponent(new CollisionManagerComponent())
+		scene.addGlobalComponent(new DeathCheckerComponent())
+		scene.addGlobalComponent(new WaveManagerComponent())
 
 		this.addWalls(scene, gameModel)
 		this.addPlayer(scene, gameModel)
@@ -81,16 +85,72 @@ export class Factory {
 			.scale(Factory.globalScale)
 			.relativePos(0.5, 0.5)
 			// .asSprite(this.createTexture(model.getSpriteInfo(Names.PADDLE)), Names.PADDLE)
-			.withComponent(new PlayerMovementComponent(Attributes.PLAYER_MOVEMENT, gameModel))
-			.withComponent(new PlayerWeaponComponent())
 			.withAttribute(Attributes.ATTACK_FREQUENCY, 5*gameModel.baseAttackFrequency)
-			.withAttribute(Attributes.MAX_VELOCITY, gameModel.baseVelocity)
-			.withAttribute(Attributes.MAX_ACCELERATION, gameModel.baseAcceleration)
+			.withAttribute(Attributes.MAX_VELOCITY, 10*gameModel.baseVelocity)
+			.withAttribute(Attributes.MAX_ACCELERATION, 100*gameModel.baseAcceleration)
+			.withAttribute(Attributes.PROJECTILE_COLOR, 0x43E214)
+			.withAttribute(Attributes.PROJECTILE_MAX_VELOCITY, 200*gameModel.baseVelocity)
+			.withAttribute(Attributes.CHARACTER_TYPE, CharacterTypes.PLAYER)
+			.withAttribute(Attributes.HP, 5)
+			.withState(States.ALIVE)
+			.withComponent(new PlayerMovementComponent(Attributes.DYNAMICS, gameModel))
+			.withComponent(new PlayerWeaponComponent())
 			.withParent(scene.stage)
 			.buildInto(player);
 	}
 
+	addEnemy(scene: ECSA.Scene, gameModel: GameModel, position: ECSA.Vector) {
+		let enemy = new ECSA.Graphics(Attributes.ENEMY);
+		enemy.beginFill(0xE56987);
+		enemy.drawPolygon([-10, -10, -10, 10, 15, 0]);
+		enemy.endFill();
+		gameModel.addEnemy(enemy)
+
+		new ECSA.Builder(scene)
+			.scale(Factory.globalScale)
+			.localPos(position.x, position.y)
+			// .asSprite(this.createTexture(model.getSpriteInfo(Names.PADDLE)), Names.PADDLE)
+			.withAttribute(Attributes.ATTACK_FREQUENCY, gameModel.baseAttackFrequency*1/4)
+			.withAttribute(Attributes.MAX_VELOCITY, gameModel.baseVelocity)
+			.withAttribute(Attributes.MAX_ACCELERATION, gameModel.baseAcceleration)
+			.withAttribute(Attributes.CHARACTER_TYPE, CharacterTypes.ENEMY)
+			.withAttribute(Attributes.HP, 2)
+			.withAttribute(Attributes.PROJECTILE_MAX_VELOCITY, 2*gameModel.baseVelocity)
+			.withState(States.ALIVE)
+			.withComponent(new EnemyMovementComponent(Attributes.DYNAMICS, gameModel))
+			.withComponent(new EnemyWeaponComponent())
+			.withParent(scene.stage)
+			.buildInto(enemy);
+	}
+
+	removeCharacter(character: ECSA.Container, gameModel: GameModel) {
+		let type: CharacterTypes = character.getAttribute(Attributes.CHARACTER_TYPE)
+
+		switch(type) {
+			case CharacterTypes.ENEMY: {
+				gameModel.removeEnemy(character.id)
+				character.remove()
+				break
+			}
+			case CharacterTypes.PLAYER: {
+				character.remove()
+				break
+			}
+		}
+	}
+
 	addUI(scene: ECSA.Scene, gameModel: GameModel) {
+		// UI Wave initializer
+		new ECSA.Builder(scene)
+			.withComponent(
+				new ECSA.GenericComponent('waveCountdown')
+					.doOnMessage(Messages.REQUEST_NEW_WAVE, (cmp, msg) => {
+						cmp.sendMessage(Messages.NEW_WAVE)
+					})
+			)
+			.withParent(scene.stage)
+			.build()
+		
 		new ECSA.Builder(scene)
 			.relativePos(0.75, 0.75)
 			.anchor(0.5)
@@ -106,8 +166,11 @@ export class Factory {
 	}
 
 	addProjectile(character: ECSA.Container, gameModel: GameModel) {
+		let color: number = character.getAttribute(Attributes.PROJECTILE_COLOR)
+		var velocity: number = character.getAttribute(Attributes.PROJECTILE_MAX_VELOCITY)
+		velocity = (velocity != null) ? velocity : gameModel.baseVelocity
 		let projectile = new ECSA.Graphics(Attributes.PROJECTILE);
-		projectile.beginFill(0x43E214);
+		projectile.beginFill((color != null) ? color : 0xFFFFED);
 		projectile.drawRect(0, 0, 10, 5)
 		projectile.endFill();
 
@@ -116,9 +179,11 @@ export class Factory {
 		new ECSA.Builder(character.scene)
 			.localPos(character.x, character.y)
 			.anchor(0.5)
-			.withComponent(new ProjectileMovementComponent(Attributes.PROJECTILE_MOVEMENT, gameModel, character.rotation))
-			.withAttribute(Attributes.MAX_VELOCITY, gameModel.baseVelocity*1.25)
-			.withAttribute(Attributes.MAX_ACCELERATION, gameModel.baseAcceleration*1.75)
+			.withAttribute(Attributes.MAX_VELOCITY, velocity)
+			.withAttribute(Attributes.MAX_ACCELERATION, velocity)
+			.withAttribute(Attributes.PROJECTILE_OWNER_TYPE, character.getAttribute(Attributes.CHARACTER_TYPE))
+			.withComponent(new ProjectileMovementComponent(Attributes.DYNAMICS, gameModel, character.rotation))
+			.withState(States.ALIVE)
 			.withParent(character.scene.stage)
 			.buildInto(projectile)
 	}

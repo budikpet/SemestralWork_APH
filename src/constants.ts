@@ -2,6 +2,11 @@ export enum Messages {
 	CREATE_PROJECTILE = "create_projectile",
 
 	WALL_COLLISION = "wall_collision",
+	PROJECTILE_COLLISION = "projectile_collision",
+
+	DEATH = "death",
+	REQUEST_NEW_WAVE = "requestNewWave",
+	NEW_WAVE = "newWave"
 
 }
 
@@ -12,7 +17,10 @@ export enum Attributes {
 	MAX_VELOCITY = "velocity",
 	MAX_ACCELERATION = "acceleration",
 	ATTACK_FREQUENCY = "attackFrequency",
-
+	DYNAMICS = "dynamics",
+	CHARACTER_TYPE = "characterType",
+	HP = "healthPoints",							// How many projectiles can a character take
+	
 	WALL_TOP = "wallTop",
 	WALL_BOTTOM = "wallBottom",
 	WALL_LEFT = "wallLeft",
@@ -20,21 +28,31 @@ export enum Attributes {
 	WALL_REPULSIVE_FORCE = "wallRepulsiveForce",
 
 	PLAYER = "player",
-	PLAYER_MOVEMENT = "playerMovement",
+	ENEMY = "enemy",
 
 	FACTORY = "factory",
 	GAME_MODEL = "gameModel",
 
 	PROJECTILE = "projectile",
-	PROJECTILE_MOVEMENT = "projectileMovement"
+	PROJECTILE_OWNER_TYPE = "projectileOwnerType",
+	PROJECTILE_COLOR = "projectileColor",
+	PROJECTILE_MAX_VELOCITY = "projectileMaxVelocity"
 }
 
 export enum States {
-	ALIVE = "alive",
-	DEAD = "dead"
+	ALIVE = 0,
+	DEAD = 1
+}
+
+export enum CharacterTypes {
+	PLAYER,
+	ENEMY,
+	NEUTRAL
 }
 
 export const WALLS_SIZE = 25
+export const DOOR_WIDTH = 50
+export const DOOR_HEIGHT = WALLS_SIZE / 2
 export var WIDTH = 800
 export var HEIGHT = 600
 
