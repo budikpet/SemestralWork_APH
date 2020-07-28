@@ -6,6 +6,9 @@ import { PlayerWeaponComponent, EnemyWeaponComponent } from './components/weapon
 import { GameModel } from './game_model';
 import { CollisionManagerComponent } from './components/collision_manager_component';
 import { DeathCheckerComponent } from './components/death_checker_component';
+import { WaveManagerComponent } from './components/wave_manager_component';
+import Dynamics from './utils/dynamics';
+import { randomFromInterval } from './utils/functions';
 
 /**
  * Creates all in-game objects.
@@ -24,8 +27,8 @@ export class Factory {
 		scene.addGlobalComponent(new ECSA.PointerInputComponent(false, true, true, true))
 		scene.addGlobalComponent(new CollisionManagerComponent())
 		scene.addGlobalComponent(new DeathCheckerComponent())
+		scene.addGlobalComponent(new WaveManagerComponent())
 
-		
 		this.addWalls(scene, gameModel)
 		this.addPlayer(scene, gameModel)
 		this.addUI(scene, gameModel)
@@ -103,17 +106,21 @@ export class Factory {
 		enemy.endFill();
 		gameModel.addEnemy(enemy)
 
+		// Random initial velocity
+		let dynamics = new Dynamics(new ECSA.Vector(randomFromInterval(1, gameModel.baseVelocity), randomFromInterval(1, gameModel.baseVelocity)))
+
 		new ECSA.Builder(scene)
 			.scale(Factory.globalScale)
 			.localPos(position.x, position.y)
 			// .asSprite(this.createTexture(model.getSpriteInfo(Names.PADDLE)), Names.PADDLE)
-			.withComponent(new EnemyMovementComponent(Attributes.DYNAMICS, gameModel))
-			.withComponent(new EnemyWeaponComponent())
 			.withAttribute(Attributes.ATTACK_FREQUENCY, gameModel.baseAttackFrequency)
 			.withAttribute(Attributes.MAX_VELOCITY, gameModel.baseVelocity)
 			.withAttribute(Attributes.MAX_ACCELERATION, gameModel.baseAcceleration)
 			.withAttribute(Attributes.CHARACTER_TYPE, CharacterTypes.ENEMY)
 			.withAttribute(Attributes.HP, 2)
+			.withAttribute(Attributes.DYNAMICS, dynamics)
+			.withComponent(new EnemyMovementComponent(Attributes.DYNAMICS, gameModel))
+			.withComponent(new EnemyWeaponComponent())
 			.withParent(scene.stage)
 			.buildInto(enemy);
 	}
@@ -135,6 +142,17 @@ export class Factory {
 	}
 
 	addUI(scene: ECSA.Scene, gameModel: GameModel) {
+		// UI Wave initializer
+		new ECSA.Builder(scene)
+			.withComponent(
+				new ECSA.GenericComponent('waveCountdown')
+					.doOnMessage(Messages.REQUEST_NEW_WAVE, (cmp, msg) => {
+						cmp.sendMessage(Messages.NEW_WAVE)
+					})
+			)
+			.withParent(scene.stage)
+			.build()
+		
 		new ECSA.Builder(scene)
 			.relativePos(0.75, 0.75)
 			.anchor(0.5)

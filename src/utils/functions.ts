@@ -47,11 +47,22 @@ export const shuffle = (arr: Array<any>) => {
 	return arr;
 };
 
-/**
- * lastTime, time - millis
- * Frequency - how many times per second
- * Returns true if given time has already reached or exceeded certain period
- */
+ /**
+  * 
+  * @param lastTime [ms]
+  * @param time [ms]
+  * @param frequency how many times per second
+  * @returns true if given time has already reached or exceeded certain period
+  */
 export const checkTime = (lastTime: number, time: number, frequency: number) => {
 	return (time - lastTime) > 1000 / frequency;
+};
+
+/**
+ * Returns a random value from an interval [min, max].
+ * @param min the minimum possible value.
+ * @param max the maximum possible value.
+ */
+export const randomFromInterval = (min: number, max: number) => {
+	return Math.floor(Math.random() * (max - min + 1) + min);
 };

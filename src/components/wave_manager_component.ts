@@ -3,7 +3,7 @@ import { Factory } from '../factory';
 import { Attribute } from 'pixi.js';
 import { Attributes, Messages } from '../constants';
 import { GameModel } from '../game_model';
-import { checkTime } from '../utils/functions';
+import { checkTime, randomFromInterval } from '../utils/functions';
 
 export class WaveManagerComponent extends ECSA.Component {
 	protected waveNum: number = 0
@@ -14,6 +14,7 @@ export class WaveManagerComponent extends ECSA.Component {
 	protected enemiesToAddCurrWave: number = 0;
 	protected enemyAddingFrequency: number = 1;	// x-times per second
 	protected lastTimeEnemyAdded: number = -1
+	protected requestedNewWave: boolean = false
 
 	onInit() {
 		super.onInit()
@@ -27,8 +28,9 @@ export class WaveManagerComponent extends ECSA.Component {
 	onMessage(msg: ECSA.Message) {
 		if(msg.action === Messages.NEW_WAVE) {
 			this.waveNum++
+			this.requestedNewWave = false
 			this.enemiesAddedCurrWave = 0
-			this.enemiesToAddCurrWave = this.gameModel.baseNumOfEnemies + 5*this.waveNum
+			this.enemiesToAddCurrWave = this.gameModel.baseNumOfEnemies + 3*this.waveNum
 		}
 	}
 
@@ -39,14 +41,21 @@ export class WaveManagerComponent extends ECSA.Component {
 				this.lastTimeEnemyAdded = absoluteTime
 
 				// Spawn a batch of enemies
-				var batchSize: number = Math.floor(Math.random()*remainingEnemies + 1)
+				var batchSize: number = randomFromInterval(1, remainingEnemies)
 				batchSize = Math.min(remainingEnemies, batchSize)
 				this.enemiesAddedCurrWave += batchSize
 
 				for(let i = 0; i < batchSize; i++) {
-					let pos = new ECSA.Vector(0, 0)
+					let spawnIndex = randomFromInterval(0, this.gameModel.spawnpoints.length - 1)
+					let pos = this.gameModel.spawnpoints[spawnIndex]
 					this.factory.addEnemy(this.scene, this.gameModel, pos)
 				}
+			}
+		} else if(this.gameModel.enemiesCnt <= 0) {
+			if(!this.requestedNewWave) {
+				// Player destroyed all enemies of the current wave, request a new one
+				this.requestedNewWave = true
+				this.sendMessage(Messages.REQUEST_NEW_WAVE)
 			}
 		}
 	}
