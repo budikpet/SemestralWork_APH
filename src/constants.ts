@@ -20,6 +20,7 @@ export enum Attributes {
 	DYNAMICS = "dynamics",
 	CHARACTER_TYPE = "characterType",
 	HP = "healthPoints",							// How many projectiles can a character take
+	SCORE = "score"
 	
 	WALL_TOP = "wallTop",
 	WALL_BOTTOM = "wallBottom",

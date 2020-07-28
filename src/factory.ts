@@ -41,7 +41,7 @@ export class Factory {
 		gameModel.walls = [wallTop, wallBottom, wallLeft, wallRight]
 
 		wallTop.beginFill(wallColor);
-		wallTop.drawRect(0, 0, WIDTH, WALLS_SIZE*2)
+		wallTop.drawRect(0, 0, WIDTH, WALLS_SIZE)
 		wallTop.endFill()
 		wallTop.assignAttribute(Attributes.WALL_REPULSIVE_FORCE, new ECSA.Vector(0, 1))
 
@@ -92,6 +92,7 @@ export class Factory {
 			.withAttribute(Attributes.PROJECTILE_MAX_VELOCITY, 200*gameModel.baseVelocity)
 			.withAttribute(Attributes.CHARACTER_TYPE, CharacterTypes.PLAYER)
 			.withAttribute(Attributes.HP, 5)
+			.withAttribute(Attributes.SCORE, 0)
 			.withState(States.ALIVE)
 			.withComponent(new PlayerMovementComponent(Attributes.DYNAMICS, gameModel))
 			.withComponent(new PlayerWeaponComponent())
@@ -116,6 +117,7 @@ export class Factory {
 			.withAttribute(Attributes.CHARACTER_TYPE, CharacterTypes.ENEMY)
 			.withAttribute(Attributes.HP, 2)
 			.withAttribute(Attributes.PROJECTILE_MAX_VELOCITY, 2*gameModel.baseVelocity)
+			.withAttribute(Attributes.SCORE, 1)
 			.withState(States.ALIVE)
 			.withComponent(new EnemyMovementComponent(Attributes.DYNAMICS, gameModel))
 			.withComponent(new EnemyWeaponComponent())
@@ -130,6 +132,9 @@ export class Factory {
 			case CharacterTypes.ENEMY: {
 				gameModel.removeEnemy(character.id)
 				character.remove()
+				let currScore: number = gameModel.player.getAttribute(Attributes.SCORE)
+				let killScore: number = character.getAttribute(Attributes.SCORE)
+				gameModel.player.assignAttribute(Attributes.SCORE, currScore + killScore)
 				break
 			}
 			case CharacterTypes.PLAYER: {
@@ -140,6 +145,18 @@ export class Factory {
 	}
 
 	addUI(scene: ECSA.Scene, gameModel: GameModel) {
+		// Spawnpoint locations
+		for(let [start, end] of gameModel.spawnpoints) {
+			let spawnpoint = new ECSA.Graphics("spawnpoints");
+			spawnpoint.beginFill(0xE56987);
+			spawnpoint.drawRect(start.x, start.y, end.x - start.x, end.y - start.y)
+			spawnpoint.endFill();
+
+			new ECSA.Builder(scene)
+				.withParent(scene.stage)
+				.buildInto(spawnpoint)
+		}
+
 		// UI Wave initializer
 		new ECSA.Builder(scene)
 			.withComponent(
@@ -151,14 +168,15 @@ export class Factory {
 			.withParent(scene.stage)
 			.build()
 		
+		// Score & HP
 		new ECSA.Builder(scene)
-			.relativePos(0.75, 0.75)
+			.localPos(WIDTH*1/6, WALLS_SIZE/2)
 			.anchor(0.5)
 			.withParent(scene.stage)
-			.withComponent(new ECSA.GenericComponent('rotation')
+			.withComponent(new ECSA.GenericComponent('scoreHP')
 				.doOnUpdate((cmp, delta, absolute) => {
-					let localPosStr = `${Math.floor(gameModel.player.position.x)}/${Math.floor(gameModel.player.position.y)}`
-					cmp.owner.asText().text = `Pos [loc]: [${localPosStr}]`
+					let str = `${gameModel.player.getAttribute(Attributes.SCORE)}/${gameModel.player.getAttribute(Attributes.HP)}`
+					cmp.owner.asText().text = `${str}`
 				})
 			)
 			.asText('text', "tst", new PIXI.TextStyle({ fill: '#FF0000', fontSize: 10 }))

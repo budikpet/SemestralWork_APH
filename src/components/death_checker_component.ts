@@ -44,13 +44,12 @@ export class DeathCheckerComponent extends ECSA.Component {
 		collisionMsg.projectile.remove()
 		
 		let currHp: number = collisionMsg.character.getAttribute(Attributes.HP)
+		collisionMsg.character.assignAttribute(Attributes.HP, currHp - 1)
 		if (currHp - 1 <= 0) {
 			// Character died
+			
 			collisionMsg.character.stateId = States.DEAD
 			this.prepareDeathAnim(collisionMsg.character)
-		} else {
-			// Character damaged
-			collisionMsg.character.assignAttribute(Attributes.HP, currHp - 1)
 		}
 	}
 
