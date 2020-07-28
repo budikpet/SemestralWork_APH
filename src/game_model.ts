@@ -1,6 +1,9 @@
 import * as ECSA from '../libs/pixi-component';
-import { WIDTH, WALLS_SIZE, HEIGHT } from './constants';
+import * as PIXI from 'pixi.js';
+import { WIDTH, WALLS_SIZE, HEIGHT, DOOR_WIDTH as DOOR_LONG_SIDE, DOOR_HEIGHT as DOOR_SHORT_SIDE } from './constants';
+import { PixiArmatureDisplay } from '../libs/dragonbones/pixi-armature-display';
 
+type Door = [PIXI.Point, PIXI.Point]
 
 export class GameModel {
 	/// Static
@@ -23,12 +26,23 @@ export class GameModel {
 	// Map of all projectiles <ID, EnemyObject>
 	protected _projectiles: Map<number, ECSA.Container> = new Map()
 
-	protected _spawnpoints: ECSA.Vector[] = [
-		new ECSA.Vector(WIDTH/2, WALLS_SIZE*3/4),			// top
-		new ECSA.Vector(WIDTH - WALLS_SIZE*3/4, HEIGHT/2),	// right
-		new ECSA.Vector(WIDTH/2, HEIGHT - WALLS_SIZE*3/4),	// bottom
-		new ECSA.Vector(WALLS_SIZE*3/4, HEIGHT/2),			// left
-	]
+	protected _spawnpoints: Door[]
+
+	constructor() {
+		let topDoorStart = new PIXI.Point(WIDTH/2 - DOOR_LONG_SIDE/2, WALLS_SIZE/2 - DOOR_SHORT_SIDE/2)
+		let rightDoorStart = new PIXI.Point(WIDTH - WALLS_SIZE/2 - DOOR_SHORT_SIDE/2, HEIGHT/2 - DOOR_LONG_SIDE/2)
+		let bottomDoorStart = new PIXI.Point(WIDTH/2 - DOOR_LONG_SIDE/2, HEIGHT - WALLS_SIZE/2 - DOOR_SHORT_SIDE/2)
+		let leftDoorStart = new PIXI.Point(WALLS_SIZE/2 - DOOR_SHORT_SIDE/2, HEIGHT/2 - DOOR_LONG_SIDE/2)
+
+		this._spawnpoints = [
+			[topDoorStart, new PIXI.Point(topDoorStart.x + DOOR_LONG_SIDE, topDoorStart.y + DOOR_SHORT_SIDE)],
+			[rightDoorStart, new PIXI.Point(rightDoorStart.x + DOOR_LONG_SIDE, rightDoorStart.y + DOOR_SHORT_SIDE)],
+			[bottomDoorStart, new PIXI.Point(bottomDoorStart.x + DOOR_LONG_SIDE, bottomDoorStart.y + DOOR_SHORT_SIDE)],
+			[leftDoorStart, new PIXI.Point(leftDoorStart.x + DOOR_LONG_SIDE, leftDoorStart.y + DOOR_SHORT_SIDE)]
+		]
+	}
+
+	/// Getters/Setters
 
 	public get player(): ECSA.Container {
 		return this._player
@@ -46,7 +60,7 @@ export class GameModel {
 		return this._projectiles
 	}
 
-	public get spawnpoints(): ECSA.Vector[] {
+	public get spawnpoints(): Door[] {
 		return this._spawnpoints
 	}
 

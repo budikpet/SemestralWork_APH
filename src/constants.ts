@@ -51,6 +51,8 @@ export enum CharacterTypes {
 }
 
 export const WALLS_SIZE = 25
+export const DOOR_WIDTH = 50
+export const DOOR_HEIGHT = WALLS_SIZE / 2
 export var WIDTH = 800
 export var HEIGHT = 600
 

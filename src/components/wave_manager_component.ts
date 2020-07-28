@@ -46,10 +46,11 @@ export class WaveManagerComponent extends ECSA.Component {
 				this.enemiesAddedCurrWave += batchSize
 
 				for(let i = 0; i < batchSize; i++) {
-					// let spawnIndex = randomFromInterval(0, this.gameModel.spawnpoints.length - 1)
-					let spawnIndex = 0
-					let pos = this.gameModel.spawnpoints[spawnIndex]
-					this.factory.addEnemy(this.scene, this.gameModel, pos)
+					let spawnIndex = randomFromInterval(0, this.gameModel.spawnpoints.length - 1)
+					let door = this.gameModel.spawnpoints[spawnIndex]
+					let ranX = randomFromInterval(door[0].x, door[1].x)
+					let ranY = randomFromInterval(door[0].y, door[1].y)
+					this.factory.addEnemy(this.scene, this.gameModel, new ECSA.Vector(ranX, ranY))
 				}
 			}
 		} else if(this.gameModel.enemiesCnt <= 0) {

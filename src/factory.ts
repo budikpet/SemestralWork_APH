@@ -7,8 +7,6 @@ import { GameModel } from './game_model';
 import { CollisionManagerComponent } from './components/collision_manager_component';
 import { DeathCheckerComponent } from './components/death_checker_component';
 import { WaveManagerComponent } from './components/wave_manager_component';
-import Dynamics from './utils/dynamics';
-import { randomFromInterval } from './utils/functions';
 
 /**
  * Creates all in-game objects.
