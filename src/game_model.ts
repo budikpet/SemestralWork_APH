@@ -14,6 +14,8 @@ export class GameModel {
 	
 	gameSpeed: number = 10
 
+	protected _waveNum: number = 0
+
 	protected _player: ECSA.Container
 
 	protected _walls: Array<ECSA.Container>
@@ -49,6 +51,14 @@ export class GameModel {
 
 	public set player(player: ECSA.Container) {
 		this._player = player
+	}
+
+	public get waveNum(): number {
+		return this._waveNum
+	}
+
+	public set waveNum(waveNum: number) {
+		this._waveNum = waveNum
 	}
 
 	public get walls(): Array<ECSA.Container> {

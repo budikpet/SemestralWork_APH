@@ -7,6 +7,7 @@ import { GameModel } from './game_model';
 import { CollisionManagerComponent } from './components/collision_manager_component';
 import { DeathCheckerComponent } from './components/death_checker_component';
 import { WaveManagerComponent } from './components/wave_manager_component';
+import { WaveCountdownComponent as WaveTextVisibilityComponent } from './components/ui_components';
 
 /**
  * Creates all in-game objects.
@@ -91,7 +92,7 @@ export class Factory {
 			.withAttribute(Attributes.PROJECTILE_COLOR, 0x43E214)
 			.withAttribute(Attributes.PROJECTILE_MAX_VELOCITY, 200*gameModel.baseVelocity)
 			.withAttribute(Attributes.CHARACTER_TYPE, CharacterTypes.PLAYER)
-			.withAttribute(Attributes.HP, 5)
+			.withAttribute(Attributes.HP, 5000)
 			.withAttribute(Attributes.SCORE, 0)
 			.withState(States.ALIVE)
 			.withComponent(new PlayerMovementComponent(Attributes.DYNAMICS, gameModel))
@@ -158,14 +159,18 @@ export class Factory {
 		}
 
 		// UI Wave initializer
+		let uiWaveTextStyle = new PIXI.TextStyle({ fill: '#FFFFFF', fontSize: 55, fontStyle: "italic", fontWeight: "bold" })
 		new ECSA.Builder(scene)
-			.withComponent(
-				new ECSA.GenericComponent('waveCountdown')
-					.doOnMessage(Messages.REQUEST_NEW_WAVE, (cmp, msg) => {
-						cmp.sendMessage(Messages.NEW_WAVE)
-					})
+			.relativePos(0.5, 0.5)
+			.anchor(0.5, 0.5)
+			.withComponent(new WaveTextVisibilityComponent())
+			.withComponent(new ECSA.GenericComponent('waveTextUpdater')
+				.doOnMessage(Messages.NEW_WAVE, (cmp: ECSA.Component, msg: ECSA.Message) => {
+					cmp.owner.asText().text = `Wave ${gameModel.waveNum}`
+				})
 			)
 			.withParent(scene.stage)
+			.asText('text', `Wave ${gameModel.waveNum + 1}`, uiWaveTextStyle)
 			.build()
 		
 		// Score & HP
@@ -175,11 +180,12 @@ export class Factory {
 			.withParent(scene.stage)
 			.withComponent(new ECSA.GenericComponent('scoreHP')
 				.doOnUpdate((cmp, delta, absolute) => {
-					let str = `${gameModel.player.getAttribute(Attributes.SCORE)}/${gameModel.player.getAttribute(Attributes.HP)}`
-					cmp.owner.asText().text = `${str}`
+					let score = `Score: ${gameModel.player.getAttribute(Attributes.SCORE)}`
+					let hp = `HP left: ${gameModel.player.getAttribute(Attributes.HP)}`
+					cmp.owner.asText().text = `${hp}\n${score}`
 				})
 			)
-			.asText('text', "tst", new PIXI.TextStyle({ fill: '#FF0000', fontSize: 10 }))
+			.asText('text', "tst", new PIXI.TextStyle({ fill: '#FFFFFF', fontSize: 10 }))
 			.build();
 	}
 

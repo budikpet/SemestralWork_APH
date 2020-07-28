@@ -5,7 +5,6 @@ export enum Messages {
 	PROJECTILE_COLLISION = "projectile_collision",
 
 	DEATH = "death",
-	REQUEST_NEW_WAVE = "requestNewWave",
 	NEW_WAVE = "newWave"
 
 }
@@ -20,7 +19,7 @@ export enum Attributes {
 	DYNAMICS = "dynamics",
 	CHARACTER_TYPE = "characterType",
 	HP = "healthPoints",							// How many projectiles can a character take
-	SCORE = "score"
+	SCORE = "score",
 	
 	WALL_TOP = "wallTop",
 	WALL_BOTTOM = "wallBottom",
@@ -51,7 +50,7 @@ export enum CharacterTypes {
 	NEUTRAL
 }
 
-export const WALLS_SIZE = 25
+export const WALLS_SIZE = 50
 export const DOOR_WIDTH = 50
 export const DOOR_HEIGHT = WALLS_SIZE / 2
 export var WIDTH = 800
