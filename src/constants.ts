@@ -4,7 +4,8 @@ export enum Messages {
 	WALL_COLLISION = "wall_collision",
 	PROJECTILE_COLLISION = "projectile_collision",
 
-	DEATH = "death"
+	DEATH = "death",
+	NEW_WAVE = "newWave"
 
 }
 

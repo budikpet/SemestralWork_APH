@@ -6,7 +6,7 @@ export class GameModel {
 	baseVelocity: number = 100
 	baseAcceleration: number = this.baseVelocity/10
 	baseAttackFrequency: number = 1
-	baseNumOfEnemies: number = 1
+	baseNumOfEnemies: number = 10
 	///
 	
 	gameSpeed: number = 10

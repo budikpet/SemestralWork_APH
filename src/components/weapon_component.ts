@@ -1,14 +1,10 @@
-import DynamicsComponent from "../utils/dynamics_component";
-import { Path, PathContext, SteeringMath } from '../../libs/pixi-math';
+import { SteeringMath } from '../../libs/pixi-math';
 import * as ECSA from '../../libs/pixi-component';
 import { Attributes, Assets, Messages } from "../constants";
 import { Factory } from "../factory";
 import { GameModel } from "../game_model";
 import { checkTime } from "../utils/functions";
 import Dynamics from "../utils/dynamics";
-import { ArmatureDisplayData } from "../../libs/dragonbones/model/display-data";
-
-
 
 /**
  * Base class for all weapon handling components. Handles rotation of the character and weapon fireing.

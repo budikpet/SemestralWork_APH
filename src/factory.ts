@@ -1,7 +1,7 @@
 import * as ECSA from '../libs/pixi-component';
 import * as PIXI from 'pixi.js';
 import { PlayerMovementComponent, ProjectileMovementComponent, EnemyMovementComponent } from './components/movement_component';
-import { Attributes, HEIGHT, WALLS_SIZE, WIDTH, CharacterTypes } from './constants';
+import { Attributes, HEIGHT, WALLS_SIZE, WIDTH, CharacterTypes, Messages } from './constants';
 import { PlayerWeaponComponent, EnemyWeaponComponent } from './components/weapon_component';
 import { GameModel } from './game_model';
 import { CollisionManagerComponent } from './components/collision_manager_component';
@@ -25,11 +25,10 @@ export class Factory {
 		scene.addGlobalComponent(new CollisionManagerComponent())
 		scene.addGlobalComponent(new DeathCheckerComponent())
 
+		
 		this.addWalls(scene, gameModel)
 		this.addPlayer(scene, gameModel)
 		this.addUI(scene, gameModel)
-
-		this.addEnemy(scene, gameModel)
 	}
 
 	addWalls(scene: ECSA.Scene, gameModel: GameModel) {
@@ -97,20 +96,16 @@ export class Factory {
 			.buildInto(player);
 	}
 
-	addEnemy(scene: ECSA.Scene, gameModel: GameModel) {
+	addEnemy(scene: ECSA.Scene, gameModel: GameModel, position: ECSA.Vector) {
 		let enemy = new ECSA.Graphics(Attributes.ENEMY);
 		enemy.beginFill(0xE56987);
 		enemy.drawPolygon([-10, -10, -10, 10, 15, 0]);
 		enemy.endFill();
 		gameModel.addEnemy(enemy)
-		// let xpos = Math.random()*WIDTH
-		// let ypos = Math.random()*HEIGHT
-		let xpos = 100
-		let ypos = 100
 
 		new ECSA.Builder(scene)
 			.scale(Factory.globalScale)
-			.localPos(xpos, ypos)
+			.localPos(position.x, position.y)
 			// .asSprite(this.createTexture(model.getSpriteInfo(Names.PADDLE)), Names.PADDLE)
 			.withComponent(new EnemyMovementComponent(Attributes.DYNAMICS, gameModel))
 			.withComponent(new EnemyWeaponComponent())
