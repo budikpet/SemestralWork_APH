@@ -237,16 +237,16 @@ export class Factory {
 
 	addUI(scene: ECSA.Scene, gameModel: GameModel) {
 		// Spawnpoint locations
-		for(let [start, end] of gameModel.spawnpoints) {
-			let spawnpoint = new ECSA.Graphics("spawnpoints");
-			spawnpoint.beginFill(0xE56987);
-			spawnpoint.drawRect(start.x, start.y, end.x - start.x, end.y - start.y)
-			spawnpoint.endFill();
+		// for(let [start, end] of gameModel.spawnpoints) {
+		// 	let spawnpoint = new ECSA.Graphics("spawnpoints");
+		// 	spawnpoint.beginFill(0xE56987);
+		// 	spawnpoint.drawRect(start.x, start.y, end.x - start.x, end.y - start.y)
+		// 	spawnpoint.endFill();
 
-			new ECSA.Builder(scene)
-				.withParent(scene.stage)
-				.buildInto(spawnpoint)
-		}
+		// 	new ECSA.Builder(scene)
+		// 		.withParent(scene.stage)
+		// 		.buildInto(spawnpoint)
+		// }
 
 		// UI Wave initializer
 		let uiWaveTextStyle = new PIXI.TextStyle({ fill: '#FFFFFF', fontSize: 55, fontStyle: "italic", fontWeight: "bold" })
