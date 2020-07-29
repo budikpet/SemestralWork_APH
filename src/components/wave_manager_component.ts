@@ -1,7 +1,7 @@
 import * as ECSA from '../../libs/pixi-component';
 import { Factory } from '../factory';
 import { Attribute } from 'pixi.js';
-import { Attributes, Messages } from '../constants';
+import { Attributes, Messages, Names } from '../constants';
 import { GameModel } from '../game_model';
 import { checkTime, randomFromInterval } from '../utils/functions';
 
@@ -17,8 +17,8 @@ export class WaveManagerComponent extends ECSA.Component {
 	onInit() {
 		super.onInit()
 		this.frequency = 50
-		this.factory = this.scene.getGlobalAttribute(Attributes.FACTORY)
-		this.gameModel = this.scene.getGlobalAttribute(Attributes.GAME_MODEL)
+		this.factory = this.scene.getGlobalAttribute(Names.FACTORY)
+		this.gameModel = this.scene.getGlobalAttribute(Names.GAME_MODEL)
 
 		// Start first wave
 		this.startNewWave()

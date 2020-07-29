@@ -1,6 +1,6 @@
 import * as ECSA from '../../libs/pixi-component';
 import * as PIXI from 'pixi.js';
-import { Messages, Attributes } from '../constants';
+import { Messages, Attributes, Names } from '../constants';
 import { checkTime } from '../utils/functions';
 import { GameModel } from '../game_model';
 import { Factory } from '../factory';
@@ -46,8 +46,8 @@ export class FinalScoreScreen extends ECSA.Component {
 
 	onInit() {
 		super.onInit()
-		this.gameModel = this.scene.getGlobalAttribute(Attributes.GAME_MODEL)
-		this.factory = this.scene.getGlobalAttribute(Attributes.FACTORY)
+		this.gameModel = this.scene.getGlobalAttribute(Names.GAME_MODEL)
+		this.factory = this.scene.getGlobalAttribute(Names.FACTORY)
 
 		let score: number = this.gameModel.player.getAttribute(Attributes.SCORE)
 		if(this.gameModel.bestScore < score) {

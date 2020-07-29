@@ -1,0 +1,97 @@
+{
+	"frames": {
+		"background": {
+			"frame": {
+				"x": 0,
+				"y": 0,
+				"w": 398,
+				"h": 344
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 398,
+				"h": 344
+			},
+			"sourceSize": {
+				"w": 398,
+				"h": 344
+			}
+		},
+		"door": {
+			"frame": {
+				"x": 0,
+				"y": 344,
+				"w": 137,
+				"h": 30
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 137,
+				"h": 30
+			},
+			"sourceSize": {
+				"w": 137,
+				"h": 30
+			}
+		},
+		"enemy_soldier_01": {
+			"frame": {
+				"x": 137,
+				"y": 344,
+				"w": 38,
+				"h": 22
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 38,
+				"h": 22
+			},
+			"sourceSize": {
+				"w": 38,
+				"h": 22
+			}
+		},
+		"soldier_01": {
+			"frame": {
+				"x": 175,
+				"y": 344,
+				"w": 38,
+				"h": 22
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 38,
+				"h": 22
+			},
+			"sourceSize": {
+				"w": 38,
+				"h": 22
+			}
+		}
+	},
+	"animations": {},
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "1.0",
+		"image": "spritesheet.png",
+		"format": "RGBA8888",
+		"size": {
+			"w": 398,
+			"h": 374
+		},
+		"scale": "1",
+		"smartupdate": "$TexturePacker:SmartUpdate:1ed185c062d15e0c67d1cf32fae1b101:41f8cdd716ae3f9b4d6703d582ed8ac2:729adc6043343cfda41c447ce8f464d6$"
+	}
+}

@@ -1,6 +1,6 @@
 import { SteeringMath } from '../../libs/pixi-math';
 import * as ECSA from '../../libs/pixi-component';
-import { Attributes, Assets, Messages, States } from "../constants";
+import { Attributes, Assets, Messages, States, Names } from "../constants";
 import { Factory } from "../factory";
 import { GameModel } from "../game_model";
 import { checkTime } from "../utils/functions";
@@ -22,8 +22,8 @@ abstract class WeaponComponent extends ECSA.Component {
 	onInit() {
 		super.onInit()
 		this.subscribe(Messages.DEATH, Messages.PLAYER_DEATH)
-		this.factory = this.scene.getGlobalAttribute<Factory>(Attributes.FACTORY)
-		this.gameModel = this.scene.getGlobalAttribute<GameModel>(Attributes.GAME_MODEL)
+		this.factory = this.scene.getGlobalAttribute<Factory>(Names.FACTORY)
+		this.gameModel = this.scene.getGlobalAttribute<GameModel>(Names.GAME_MODEL)
 
 		this.attackFrequency = this.owner.getAttribute(Attributes.ATTACK_FREQUENCY)
 
@@ -167,6 +167,16 @@ export class PlayerWeaponComponent extends WeaponComponent {
 		let force = this.math.seek(this.mousePos, ownerPos, new ECSA.Vector(0, 0), ownerMaxVelocity, 1)
 
 		return force
+	}
+
+	protected tryFire(absoluteTime: number) {
+		let res = super.tryFire(absoluteTime)
+
+		if(res) {
+			this.sendMessage(Messages.PLAYER_SHOOT)
+		}
+
+		return res
 	}
 
 }

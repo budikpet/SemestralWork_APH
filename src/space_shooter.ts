@@ -1,6 +1,6 @@
 import * as ECSA from '../libs/pixi-component';
 import { Factory } from './factory';
-import { WIDTH, HEIGHT } from './constants';
+import { WIDTH, HEIGHT, Assets } from './constants';
 import { GameModel } from './game_model';
 
 // TODO rename your game
@@ -27,13 +27,19 @@ class SpaceShooter {
 
 		this.engine.app.loader
 			.reset()
-			//.add(myFile, 'myFileUrl') load your assets here
+			.add(Assets.SPRITES, './assets/spaceShooter/graphics/spritesheet.json')
+			.add(Assets.SPRITESHEET, './assets/spaceShooter/graphics/spritesheet.png')
+			.add(Assets.SOUND_DEATH, './assets/spaceShooter/sounds/death.mp3')
+			.add(Assets.SOUND_FIRE, './assets/spaceShooter/sounds/fire.mp3')
+			.add(Assets.SOUND_HIT, './assets/spaceShooter/sounds/hit.mp3')
+			.add(Assets.SOUND_NEW_WAVE, './assets/spaceShooter/sounds/new_wave.mp3')
 			.load(() => this.onAssetsLoaded());
 	}
 
 	onAssetsLoaded() {
 		// init the scene and run your game
-		let factory = new Factory();
+		let resources = this.engine.app.loader.resources;
+		let factory = new Factory(resources[Assets.SPRITES].data);
 		let gameModel = new GameModel()
 		factory.initializeLevel(this.engine.scene, gameModel)
 	}

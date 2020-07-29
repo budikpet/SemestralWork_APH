@@ -1,5 +1,6 @@
 export enum Messages {
 	CREATE_PROJECTILE = "create_projectile",
+	PLAYER_SHOOT = "player_shoot",
 
 	WALL_COLLISION = "wall_collision",
 	PROJECTILE_COLLISION = "projectile_collision",
@@ -11,6 +12,25 @@ export enum Messages {
 }
 
 export enum Assets {
+	SPRITES = 'file_sprites',
+	SPRITESHEET = 'file_spritesheet',
+	SOUND_DEATH = "soundDeath",
+	SOUND_FIRE = "soundFire",
+	SOUND_HIT = "soundHit",
+	SOUND_NEW_WAVE = "soundNewWave"
+}
+
+export enum Names {
+	WALL = "wall",
+	DOOR = "door",
+	BACKGROUND = "background",
+	PLAYER = "player",
+	ENEMY = "enemy",
+
+	FACTORY = "factory",
+	GAME_MODEL = "gameModel",
+
+	PROJECTILE = "projectile"
 }
 
 export enum Attributes {
@@ -21,21 +41,11 @@ export enum Attributes {
 	CHARACTER_TYPE = "characterType",
 	HP = "healthPoints",							// How many projectiles can a character take
 	SCORE = "score",
-	DEATH_MSG = "deathMsg",
-	
-	WALL_TOP = "wallTop",
-	WALL_BOTTOM = "wallBottom",
-	WALL_LEFT = "wallLeft",
-	WALL_RIGHT = "wallRight",
+	DEATH_MSG_TYPE = "deathMsgTYPE",
+
 	WALL_REPULSIVE_FORCE = "wallRepulsiveForce",
+	WALL_ROTATION = "wallRotation",
 
-	PLAYER = "player",
-	ENEMY = "enemy",
-
-	FACTORY = "factory",
-	GAME_MODEL = "gameModel",
-
-	PROJECTILE = "projectile",
 	PROJECTILE_OWNER_TYPE = "projectileOwnerType",
 	PROJECTILE_COLOR = "projectileColor",
 	PROJECTILE_MAX_VELOCITY = "projectileMaxVelocity"
