@@ -67,6 +67,15 @@ export class Factory {
 		let innerWallColor = 0x3d4c5c
 
 		// Create walls
+		let wallHorizontal = new ECSA.Graphics(Names.WALL)
+		wallHorizontal.beginFill(outerWallColor);
+		wallHorizontal.drawRect(0, 0, WIDTH, WALLS_SIZE)
+		wallHorizontal.endFill()
+
+		let wallVertical = new ECSA.Graphics(Names.WALL)
+		wallVertical.beginFill(outerWallColor);
+		wallVertical.drawRect(0, 0, WALLS_SIZE, HEIGHT)
+		wallVertical.endFill()
 
 		let wallTop = new ECSA.Graphics(Names.WALL)
 		let wallBottom = new ECSA.Graphics(Names.WALL)
@@ -74,24 +83,16 @@ export class Factory {
 		let wallRight = new ECSA.Graphics(Names.WALL)
 		gameModel.walls = [wallTop, wallBottom, wallLeft, wallRight]
 
-		wallTop.beginFill(outerWallColor);
-		wallTop.drawRect(0, 0, WIDTH, WALLS_SIZE)
-		wallTop.endFill()
+		wallTop.addChild(wallHorizontal.clone())
 		wallTop.assignAttribute(Attributes.WALL_REPULSIVE_FORCE, new ECSA.Vector(0, 1))
 
-		wallBottom.beginFill(outerWallColor);
-		wallBottom.drawRect(0, 0, WIDTH, WALLS_SIZE)
-		wallBottom.endFill()
+		wallBottom.addChild(wallHorizontal.clone())
 		wallBottom.assignAttribute(Attributes.WALL_REPULSIVE_FORCE, new ECSA.Vector(0, -1))
 
-		wallLeft.beginFill(outerWallColor);
-		wallLeft.drawRect(0, 0, WALLS_SIZE, HEIGHT)
-		wallLeft.endFill()
+		wallLeft.addChild(wallVertical.clone())
 		wallLeft.assignAttribute(Attributes.WALL_REPULSIVE_FORCE, new ECSA.Vector(1, 0))
 
-		wallRight.beginFill(outerWallColor);
-		wallRight.drawRect(0, 0, WALLS_SIZE, HEIGHT)
-		wallRight.endFill()
+		wallRight.addChild(wallVertical.clone())
 		wallRight.assignAttribute(Attributes.WALL_REPULSIVE_FORCE, new ECSA.Vector(-1, 0))
 
 		new ECSA.Builder(scene).withParent(scene.stage).scale(Factory.globalScale).relativePos(0, 0).buildInto(wallTop)
