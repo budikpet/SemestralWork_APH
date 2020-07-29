@@ -315,8 +315,8 @@ export default class ChainComponent extends Component {
 
 
 	/**
-	 * Waits given amount of seconds
-	 * @param time number of seconds to wait; or function that returns this number
+	 * Waits given amount of milliseconds
+	 * @param time number of milliseconds to wait; or function that returns this number
 	 */
 	waitTime(time: number | Func<void, number>): ChainComponent {
 		this.enqueue(CMD_WAIT_TIME, time);

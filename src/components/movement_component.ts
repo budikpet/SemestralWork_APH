@@ -24,7 +24,7 @@ abstract class MovementComponent extends DynamicsComponent {
 
 	onInit() {
 		super.onInit()
-		this.subscribe(Messages.WALL_COLLISION, Messages.DEATH)
+		this.subscribe(Messages.WALL_COLLISION, Messages.DEATH, Messages.PLAYER_DEATH)
 
 		this.maxVelocity = this.owner.getAttribute(Attributes.MAX_VELOCITY)
 		this.maxAcceleration = this.owner.getAttribute(Attributes.MAX_ACCELERATION)
@@ -44,7 +44,7 @@ abstract class MovementComponent extends DynamicsComponent {
 			if(collisionMsg.gameObject.id === this.owner.id) {
 				this.onWallCollision(collisionMsg)
 			}
-		} else if(msg.action === Messages.DEATH) {
+		} else if(msg.action === Messages.DEATH || msg.action === Messages.PLAYER_DEATH) {
 			let deathMsg: DeathMessage = msg.data
 			if(this.owner.id === deathMsg.id) {
 				this.finish()
@@ -110,7 +110,6 @@ export class EnemyMovementComponent extends MovementComponent {
  */
 export class PlayerMovementComponent extends MovementComponent {
 	_inputComponent: ECSA.KeyInputComponent
-	mousePos: ECSA.Vector = new ECSA.Vector(0, 0)
 
 	protected calcForce(delta: number): ECSA.Vector {
 		if(this._inputComponent == null) {

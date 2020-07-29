@@ -5,8 +5,9 @@ import { Attributes, HEIGHT, WALLS_SIZE, WIDTH, CharacterTypes, Messages, States
 import { PlayerWeaponComponent, EnemyWeaponComponent } from './components/weapon_component';
 import { GameModel } from './game_model';
 import { CollisionManagerComponent } from './components/collision_manager_component';
-import { DeathCheckerComponent } from './components/death_checker_component';
+import { DeathCheckerComponent, DeathMessage } from './components/death_checker_component';
 import { WaveManagerComponent } from './components/wave_manager_component';
+import { WaveCountdownComponent as WaveTextVisibilityComponent, FinalScoreScreen as FinalScoreScreenComponent } from './components/ui_components';
 
 /**
  * Creates all in-game objects.
@@ -14,10 +15,15 @@ import { WaveManagerComponent } from './components/wave_manager_component';
 export class Factory {
 	static globalScale = 1;
 
-	initializeLevel(scene: ECSA.Scene) {
-		let gameModel = new GameModel()
+	resetGame(scene: ECSA.Scene) {
+		let gameModel: GameModel = scene.getGlobalAttribute(Attributes.GAME_MODEL)
+		gameModel.clear()
+		scene.clearScene()
 
-		scene.clearScene();
+		this.initializeLevel(scene, gameModel)
+	}
+
+	initializeLevel(scene: ECSA.Scene, gameModel: GameModel) {
 		scene.assignGlobalAttribute(Attributes.FACTORY, this);
 		scene.assignGlobalAttribute(Attributes.GAME_MODEL, gameModel);
 		
@@ -41,7 +47,7 @@ export class Factory {
 		gameModel.walls = [wallTop, wallBottom, wallLeft, wallRight]
 
 		wallTop.beginFill(wallColor);
-		wallTop.drawRect(0, 0, WIDTH, WALLS_SIZE*2)
+		wallTop.drawRect(0, 0, WIDTH, WALLS_SIZE)
 		wallTop.endFill()
 		wallTop.assignAttribute(Attributes.WALL_REPULSIVE_FORCE, new ECSA.Vector(0, 1))
 
@@ -92,6 +98,8 @@ export class Factory {
 			.withAttribute(Attributes.PROJECTILE_MAX_VELOCITY, 200*gameModel.baseVelocity)
 			.withAttribute(Attributes.CHARACTER_TYPE, CharacterTypes.PLAYER)
 			.withAttribute(Attributes.HP, 5)
+			.withAttribute(Attributes.SCORE, 0)
+			.withAttribute(Attributes.DEATH_MSG, Messages.PLAYER_DEATH)
 			.withState(States.ALIVE)
 			.withComponent(new PlayerMovementComponent(Attributes.DYNAMICS, gameModel))
 			.withComponent(new PlayerWeaponComponent())
@@ -116,6 +124,8 @@ export class Factory {
 			.withAttribute(Attributes.CHARACTER_TYPE, CharacterTypes.ENEMY)
 			.withAttribute(Attributes.HP, 2)
 			.withAttribute(Attributes.PROJECTILE_MAX_VELOCITY, 2*gameModel.baseVelocity)
+			.withAttribute(Attributes.SCORE, 1)
+			.withAttribute(Attributes.DEATH_MSG, Messages.DEATH)
 			.withState(States.ALIVE)
 			.withComponent(new EnemyMovementComponent(Attributes.DYNAMICS, gameModel))
 			.withComponent(new EnemyWeaponComponent())
@@ -130,6 +140,9 @@ export class Factory {
 			case CharacterTypes.ENEMY: {
 				gameModel.removeEnemy(character.id)
 				character.remove()
+				let currScore: number = gameModel.player.getAttribute(Attributes.SCORE)
+				let killScore: number = character.getAttribute(Attributes.SCORE)
+				gameModel.player.assignAttribute(Attributes.SCORE, currScore + killScore)
 				break
 			}
 			case CharacterTypes.PLAYER: {
@@ -140,29 +153,65 @@ export class Factory {
 	}
 
 	addUI(scene: ECSA.Scene, gameModel: GameModel) {
+		// Spawnpoint locations
+		for(let [start, end] of gameModel.spawnpoints) {
+			let spawnpoint = new ECSA.Graphics("spawnpoints");
+			spawnpoint.beginFill(0xE56987);
+			spawnpoint.drawRect(start.x, start.y, end.x - start.x, end.y - start.y)
+			spawnpoint.endFill();
+
+			new ECSA.Builder(scene)
+				.withParent(scene.stage)
+				.buildInto(spawnpoint)
+		}
+
 		// UI Wave initializer
+		let uiWaveTextStyle = new PIXI.TextStyle({ fill: '#FFFFFF', fontSize: 55, fontStyle: "italic", fontWeight: "bold" })
 		new ECSA.Builder(scene)
-			.withComponent(
-				new ECSA.GenericComponent('waveCountdown')
-					.doOnMessage(Messages.REQUEST_NEW_WAVE, (cmp, msg) => {
-						cmp.sendMessage(Messages.NEW_WAVE)
-					})
-			)
-			.withParent(scene.stage)
-			.build()
-		
-		new ECSA.Builder(scene)
-			.relativePos(0.75, 0.75)
-			.anchor(0.5)
-			.withParent(scene.stage)
-			.withComponent(new ECSA.GenericComponent('rotation')
-				.doOnUpdate((cmp, delta, absolute) => {
-					let localPosStr = `${Math.floor(gameModel.player.position.x)}/${Math.floor(gameModel.player.position.y)}`
-					cmp.owner.asText().text = `Pos [loc]: [${localPosStr}]`
+			.relativePos(0.5, 0.5)
+			.anchor(0.5, 0.5)
+			.withComponent(new WaveTextVisibilityComponent())
+			.withComponent(new ECSA.GenericComponent('waveTextUpdater')
+				.doOnMessage(Messages.NEW_WAVE, (cmp: ECSA.Component, msg: ECSA.Message) => {
+					cmp.owner.asText().text = `Wave ${gameModel.waveNum}`
 				})
 			)
-			.asText('text', "tst", new PIXI.TextStyle({ fill: '#FF0000', fontSize: 10 }))
+			.withParent(scene.stage)
+			.asText('text', `Wave ${gameModel.waveNum + 1}`, uiWaveTextStyle)
+			.build()
+		
+		// Score & HP
+		new ECSA.Builder(scene)
+			.localPos(WIDTH*1/6, WALLS_SIZE/2)
+			.anchor(0.5)
+			.withParent(scene.stage)
+			.withComponent(new ECSA.GenericComponent('scoreHP')
+				.doOnUpdate((cmp, delta, absolute) => {
+					let score = `Score: ${gameModel.player.getAttribute(Attributes.SCORE)}`
+					let hp = `HP left: ${gameModel.player.getAttribute(Attributes.HP)}`
+					cmp.owner.asText().text = `${hp}\n${score}`
+				})
+			)
+			.asText('text', "tst", new PIXI.TextStyle({ fill: '#FFFFFF', fontSize: 10 }))
 			.build();
+
+		// Game over
+		let uiGameOverTextStyle = new PIXI.TextStyle({ fill: '#FFFFFF', fontSize: 80, fontStyle: "italic", fontWeight: "bold" })
+		new ECSA.Builder(scene)
+			.relativePos(0.5, 0.5)
+			.anchor(0.5, 0.5)
+			.withComponent(
+				new ECSA.ChainComponent()
+					.execute((cmp) => {cmp.owner.visible = false})
+					.waitForMessage(Messages.PLAYER_DEATH)
+					.execute((cmp) => {cmp.owner.visible = true})
+					.waitTime(1500)
+					.addComponentAndWait(new FinalScoreScreenComponent())
+			)
+			.withParent(scene.stage)
+			.asText('gameOver', `Game over`, uiGameOverTextStyle)
+			.build()
+
 	}
 
 	addProjectile(character: ECSA.Container, gameModel: GameModel) {

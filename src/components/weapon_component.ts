@@ -1,6 +1,6 @@
 import { SteeringMath } from '../../libs/pixi-math';
 import * as ECSA from '../../libs/pixi-component';
-import { Attributes, Assets, Messages } from "../constants";
+import { Attributes, Assets, Messages, States } from "../constants";
 import { Factory } from "../factory";
 import { GameModel } from "../game_model";
 import { checkTime } from "../utils/functions";
@@ -21,7 +21,7 @@ abstract class WeaponComponent extends ECSA.Component {
 
 	onInit() {
 		super.onInit()
-		this.subscribe(Messages.DEATH)
+		this.subscribe(Messages.DEATH, Messages.PLAYER_DEATH)
 		this.factory = this.scene.getGlobalAttribute<Factory>(Attributes.FACTORY)
 		this.gameModel = this.scene.getGlobalAttribute<GameModel>(Attributes.GAME_MODEL)
 
@@ -33,7 +33,7 @@ abstract class WeaponComponent extends ECSA.Component {
 	}
 
 	onMessage(msg: ECSA.Message) {
-		if(msg.action === Messages.DEATH) {
+		if(msg.action === Messages.DEATH || msg.action === Messages.PLAYER_DEATH) {
 			let deathMsg: DeathMessage = msg.data
 			if(this.owner.id === deathMsg.id) {
 				this.finish()
@@ -129,7 +129,7 @@ export class EnemyWeaponComponent extends WeaponComponent {
 		let ownerMaxVelocity: number = this.owner.getAttribute(Attributes.MAX_VELOCITY)
 		let force = this.math.seek(targetPos, ownerPos, new ECSA.Vector(0, 0), 10000, 1)
 
-		this.shouldFire = true
+		this.shouldFire = this.gameModel.player.stateId === States.ALIVE
 
 		return force
 	}

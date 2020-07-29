@@ -6,7 +6,6 @@ import { GameModel } from '../game_model';
 import { checkTime, randomFromInterval } from '../utils/functions';
 
 export class WaveManagerComponent extends ECSA.Component {
-	protected waveNum: number = 0
 	protected factory: Factory
 	protected gameModel: GameModel;
 
@@ -14,7 +13,6 @@ export class WaveManagerComponent extends ECSA.Component {
 	protected enemiesToAddCurrWave: number = 0;
 	protected enemyAddingFrequency: number = 1;	// x-times per second
 	protected lastTimeEnemyAdded: number = -1
-	protected requestedNewWave: boolean = false
 
 	onInit() {
 		super.onInit()
@@ -22,16 +20,8 @@ export class WaveManagerComponent extends ECSA.Component {
 		this.factory = this.scene.getGlobalAttribute(Attributes.FACTORY)
 		this.gameModel = this.scene.getGlobalAttribute(Attributes.GAME_MODEL)
 
-		this.subscribe(Messages.NEW_WAVE)
-	}
-
-	onMessage(msg: ECSA.Message) {
-		if(msg.action === Messages.NEW_WAVE) {
-			this.waveNum++
-			this.requestedNewWave = false
-			this.enemiesAddedCurrWave = 0
-			this.enemiesToAddCurrWave = this.gameModel.baseNumOfEnemies + 2*this.waveNum
-		}
+		// Start first wave
+		this.startNewWave()
 	}
 
 	onUpdate(delta: number, absoluteTime: number) {
@@ -54,11 +44,15 @@ export class WaveManagerComponent extends ECSA.Component {
 				}
 			}
 		} else if(this.gameModel.enemiesCnt <= 0) {
-			if(!this.requestedNewWave) {
-				// Player destroyed all enemies of the current wave, request a new one
-				this.requestedNewWave = true
-				this.sendMessage(Messages.REQUEST_NEW_WAVE)
-			}
+			// Player destroyed all enemies of the current wave, request a new one
+			this.startNewWave()
+			this.sendMessage(Messages.NEW_WAVE)
 		}
+	}
+
+	protected startNewWave() {
+		this.gameModel.waveNum++
+		this.enemiesAddedCurrWave = 0
+		this.enemiesToAddCurrWave = this.gameModel.baseNumOfEnemies + 2*this.gameModel.waveNum
 	}
 }

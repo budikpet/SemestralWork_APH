@@ -1,7 +1,6 @@
 import * as ECSA from '../libs/pixi-component';
 import * as PIXI from 'pixi.js';
 import { WIDTH, WALLS_SIZE, HEIGHT, DOOR_WIDTH as DOOR_LONG_SIDE, DOOR_HEIGHT as DOOR_SHORT_SIDE } from './constants';
-import { PixiArmatureDisplay } from '../libs/dragonbones/pixi-armature-display';
 
 type Door = [PIXI.Point, PIXI.Point]
 
@@ -14,9 +13,10 @@ export class GameModel {
 	///
 	
 	gameSpeed: number = 10
+	bestScore: number = 0
+	protected _waveNum: number = 0
 
 	protected _player: ECSA.Container
-
 	protected _walls: Array<ECSA.Container>
 
 	// Map of all enemies <ID, EnemyObject>
@@ -25,7 +25,6 @@ export class GameModel {
 
 	// Map of all projectiles <ID, EnemyObject>
 	protected _projectiles: Map<number, ECSA.Container> = new Map()
-
 	protected _spawnpoints: Door[]
 
 	constructor() {
@@ -36,10 +35,19 @@ export class GameModel {
 
 		this._spawnpoints = [
 			[topDoorStart, new PIXI.Point(topDoorStart.x + DOOR_LONG_SIDE, topDoorStart.y + DOOR_SHORT_SIDE)],
-			[rightDoorStart, new PIXI.Point(rightDoorStart.x + DOOR_LONG_SIDE, rightDoorStart.y + DOOR_SHORT_SIDE)],
+			[rightDoorStart, new PIXI.Point(rightDoorStart.x + DOOR_SHORT_SIDE, rightDoorStart.y + DOOR_LONG_SIDE)],
 			[bottomDoorStart, new PIXI.Point(bottomDoorStart.x + DOOR_LONG_SIDE, bottomDoorStart.y + DOOR_SHORT_SIDE)],
-			[leftDoorStart, new PIXI.Point(leftDoorStart.x + DOOR_LONG_SIDE, leftDoorStart.y + DOOR_SHORT_SIDE)]
+			[leftDoorStart, new PIXI.Point(leftDoorStart.x + DOOR_SHORT_SIDE, leftDoorStart.y + DOOR_LONG_SIDE)]
 		]
+	}
+
+	public clear() {
+		this._waveNum = 0
+		this._player = null
+		this._walls = null
+		this._enemies.clear()
+		this._enemiesCnt = 0
+		this._projectiles.clear()
 	}
 
 	/// Getters/Setters
@@ -50,6 +58,14 @@ export class GameModel {
 
 	public set player(player: ECSA.Container) {
 		this._player = player
+	}
+
+	public get waveNum(): number {
+		return this._waveNum
+	}
+
+	public set waveNum(waveNum: number) {
+		this._waveNum = waveNum
 	}
 
 	public get walls(): Array<ECSA.Container> {
