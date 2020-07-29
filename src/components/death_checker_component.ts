@@ -1,5 +1,5 @@
 import * as ECSA from '../../libs/pixi-component';
-import { Messages, Attributes, CharacterTypes, States } from '../constants';
+import { Messages, Attributes, CharacterTypes, States, Names } from '../constants';
 import { ProjectileCollisionMsg } from './collision_manager_component';
 import { GameModel } from '../game_model';
 import { DeathAnimation } from './animations_components';
@@ -23,8 +23,8 @@ export class DeathCheckerComponent extends ECSA.Component {
 		super.onInit()
 		this.subscribe(Messages.PROJECTILE_COLLISION)
 
-		this.gameModel = this.scene.getGlobalAttribute(Attributes.GAME_MODEL)
-		this.factory = this.scene.getGlobalAttribute(Attributes.FACTORY)
+		this.gameModel = this.scene.getGlobalAttribute(Names.GAME_MODEL)
+		this.factory = this.scene.getGlobalAttribute(Names.FACTORY)
 	}
 
 	onMessage(msg: ECSA.Message) {
@@ -53,7 +53,7 @@ export class DeathCheckerComponent extends ECSA.Component {
 	}
 
 	protected prepareDeathAnim(character: ECSA.Container) {
-		var deathMsgKey: string = character.getAttribute(Attributes.DEATH_MSG)
+		var deathMsgKey: string = character.getAttribute(Attributes.DEATH_MSG_TYPE)
 		this.sendMessage(deathMsgKey, new DeathMessage(character))
 		
 		character.addComponent(

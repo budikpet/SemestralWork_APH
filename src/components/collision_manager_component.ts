@@ -1,7 +1,7 @@
 import * as ECSA from '../../libs/pixi-component';
 import * as PIXI from 'pixi.js';
 import { GameModel } from '../game_model';
-import { Messages, Attributes, CharacterTypes } from '../constants';
+import { Messages, Attributes, CharacterTypes, Names } from '../constants';
 
 export class WallCollisionMsg {
 	public gameObject: ECSA.Container
@@ -31,7 +31,7 @@ export class CollisionManagerComponent extends ECSA.Component {
 
 	onInit() {
 		super.onInit()
-		this.gameModel = this.scene.getGlobalAttribute(Attributes.GAME_MODEL)
+		this.gameModel = this.scene.getGlobalAttribute(Names.GAME_MODEL)
 	}
 
 	onUpdate() {

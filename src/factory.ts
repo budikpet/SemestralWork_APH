@@ -1,11 +1,11 @@
 import * as ECSA from '../libs/pixi-component';
 import * as PIXI from 'pixi.js';
 import { PlayerMovementComponent, ProjectileMovementComponent, EnemyMovementComponent } from './components/movement_component';
-import { Attributes, HEIGHT, WALLS_SIZE, WIDTH, CharacterTypes, Messages, States, Assets } from './constants';
+import { Attributes, HEIGHT, WALLS_SIZE, WIDTH, CharacterTypes, Messages, States, Assets, Names } from './constants';
 import { PlayerWeaponComponent, EnemyWeaponComponent } from './components/weapon_component';
 import { GameModel } from './game_model';
 import { CollisionManagerComponent } from './components/collision_manager_component';
-import { DeathCheckerComponent, DeathMessage } from './components/death_checker_component';
+import { DeathCheckerComponent } from './components/death_checker_component';
 import { WaveManagerComponent } from './components/wave_manager_component';
 import { WaveCountdownComponent as WaveTextVisibilityComponent, FinalScoreScreen as FinalScoreScreenComponent } from './components/ui_components';
 import { SpriteData, SpriteFrame, SpriteDimensions, SpriteAnimation } from './utils/sprite_utils';
@@ -25,7 +25,7 @@ export class Factory {
 	}
 
 	resetGame(scene: ECSA.Scene) {
-		let gameModel: GameModel = scene.getGlobalAttribute(Attributes.GAME_MODEL)
+		let gameModel: GameModel = scene.getGlobalAttribute(Names.GAME_MODEL)
 		gameModel.clear()
 		scene.clearScene()
 
@@ -33,8 +33,8 @@ export class Factory {
 	}
 
 	initializeLevel(scene: ECSA.Scene, gameModel: GameModel) {
-		scene.assignGlobalAttribute(Attributes.FACTORY, this);
-		scene.assignGlobalAttribute(Attributes.GAME_MODEL, gameModel);
+		scene.assignGlobalAttribute(Names.FACTORY, this);
+		scene.assignGlobalAttribute(Names.GAME_MODEL, gameModel);
 		
 		scene.addGlobalComponent(new ECSA.KeyInputComponent());
 		scene.addGlobalComponent(new ECSA.PointerInputComponent(false, true, true, true))
@@ -54,7 +54,7 @@ export class Factory {
 		let background: ECSA.Sprite = new ECSA.Builder(scene)
 			.scale(Factory.globalScale)
 			.localPos(WALLS_SIZE, WALLS_SIZE)
-			.asSprite(this.createTexture(spriteFrame), Attributes.BACKGROUND)
+			.asSprite(this.createTexture(spriteFrame), Names.BACKGROUND)
 			.withParent(scene.stage)
 			.build();
 
@@ -63,10 +63,10 @@ export class Factory {
 	}
 
 	addWalls(scene: ECSA.Scene, gameModel: GameModel) {
-		let wallTop = new ECSA.Graphics(Attributes.WALL_TOP)
-		let wallBottom = new ECSA.Graphics(Attributes.WALL_BOTTOM)
-		let wallLeft = new ECSA.Graphics(Attributes.WALL_LEFT)
-		let wallRight = new ECSA.Graphics(Attributes.WALL_RIGHT)
+		let wallTop = new ECSA.Graphics(Names.WALL_TOP)
+		let wallBottom = new ECSA.Graphics(Names.WALL_BOTTOM)
+		let wallLeft = new ECSA.Graphics(Names.WALL_LEFT)
+		let wallRight = new ECSA.Graphics(Names.WALL_RIGHT)
 		let wallColor = 0xBBBCBF
 		gameModel.walls = [wallTop, wallBottom, wallLeft, wallRight]
 
@@ -99,23 +99,13 @@ export class Factory {
 	}
 
 	addPlayer(scene: ECSA.Scene, gameModel: GameModel) {
-		// let player = new ECSA.Graphics(Attributes.PLAYER);
-		// gameModel.player = player
-		// player.beginFill(0x47a1d5);
-		// player.drawPolygon([-10, -10, -10, 10, 15, 0]);
-		// // player.moveTo(100, 100)
-		// // player.lineTo(110, 100);
-		// // player.lineTo(105, 80);
-		// // player.lineTo(100, 100);
-		// player.endFill();
-
 		let spriteFrame: SpriteFrame = this.spritesData.frames.soldier_01
 
 		gameModel.player = new ECSA.Builder(scene)
 			.scale(Factory.globalScale)
 			.relativePos(0.5, 0.5)
 			.anchor(0.5, 0.5)
-			.asSprite(this.createTexture(spriteFrame), Attributes.PLAYER)
+			.asSprite(this.createTexture(spriteFrame), Names.PLAYER)
 			.withAttribute(Attributes.ATTACK_FREQUENCY, 5*gameModel.baseAttackFrequency)
 			.withAttribute(Attributes.MAX_VELOCITY, 10*gameModel.baseVelocity)
 			.withAttribute(Attributes.MAX_ACCELERATION, 100*gameModel.baseAcceleration)
@@ -124,7 +114,7 @@ export class Factory {
 			.withAttribute(Attributes.CHARACTER_TYPE, CharacterTypes.PLAYER)
 			.withAttribute(Attributes.HP, 500)
 			.withAttribute(Attributes.SCORE, 0)
-			.withAttribute(Attributes.DEATH_MSG, Messages.PLAYER_DEATH)
+			.withAttribute(Attributes.DEATH_MSG_TYPE, Messages.PLAYER_DEATH)
 			.withState(States.ALIVE)
 			.withComponent(new PlayerMovementComponent(Attributes.DYNAMICS, gameModel))
 			.withComponent(new PlayerWeaponComponent())
@@ -133,7 +123,7 @@ export class Factory {
 	}
 
 	addEnemy(scene: ECSA.Scene, gameModel: GameModel, position: ECSA.Vector) {
-		let enemy = new ECSA.Graphics(Attributes.ENEMY);
+		let enemy = new ECSA.Graphics(Names.ENEMY);
 		enemy.beginFill(0xE56987);
 		enemy.drawPolygon([-10, -10, -10, 10, 15, 0]);
 		enemy.endFill();
@@ -150,7 +140,7 @@ export class Factory {
 			.withAttribute(Attributes.HP, 2)
 			.withAttribute(Attributes.PROJECTILE_MAX_VELOCITY, 2*gameModel.baseVelocity)
 			.withAttribute(Attributes.SCORE, 1)
-			.withAttribute(Attributes.DEATH_MSG, Messages.DEATH)
+			.withAttribute(Attributes.DEATH_MSG_TYPE, Messages.DEATH)
 			.withState(States.ALIVE)
 			.withComponent(new EnemyMovementComponent(Attributes.DYNAMICS, gameModel))
 			.withComponent(new EnemyWeaponComponent())
@@ -243,7 +233,7 @@ export class Factory {
 		let color: number = character.getAttribute(Attributes.PROJECTILE_COLOR)
 		var velocity: number = character.getAttribute(Attributes.PROJECTILE_MAX_VELOCITY)
 		velocity = (velocity != null) ? velocity : gameModel.baseVelocity
-		let projectile = new ECSA.Graphics(Attributes.PROJECTILE);
+		let projectile = new ECSA.Graphics(Names.PROJECTILE);
 		projectile.beginFill((color != null) ? color : 0xFFFFED);
 		projectile.drawRect(0, 0, 10, 5)
 		projectile.endFill();

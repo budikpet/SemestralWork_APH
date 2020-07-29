@@ -15,21 +15,11 @@ export enum Assets {
 	SPRITESHEET = 'file_spritesheet',
 }
 
-export enum Attributes {
-	MAX_VELOCITY = "velocity",
-	MAX_ACCELERATION = "acceleration",
-	ATTACK_FREQUENCY = "attackFrequency",
-	DYNAMICS = "dynamics",
-	CHARACTER_TYPE = "characterType",
-	HP = "healthPoints",							// How many projectiles can a character take
-	SCORE = "score",
-	DEATH_MSG = "deathMsg",
-	
+export enum Names {
 	WALL_TOP = "wallTop",
 	WALL_BOTTOM = "wallBottom",
 	WALL_LEFT = "wallLeft",
 	WALL_RIGHT = "wallRight",
-	WALL_REPULSIVE_FORCE = "wallRepulsiveForce",
 
 	BACKGROUND = "background",
 	PLAYER = "player",
@@ -38,7 +28,20 @@ export enum Attributes {
 	FACTORY = "factory",
 	GAME_MODEL = "gameModel",
 
-	PROJECTILE = "projectile",
+	PROJECTILE = "projectile"
+}
+
+export enum Attributes {
+	MAX_VELOCITY = "velocity",
+	MAX_ACCELERATION = "acceleration",
+	ATTACK_FREQUENCY = "attackFrequency",
+	DYNAMICS = "dynamics",
+	CHARACTER_TYPE = "characterType",
+	HP = "healthPoints",							// How many projectiles can a character take
+	SCORE = "score",
+	DEATH_MSG_TYPE = "deathMsgTYPE",
+	WALL_REPULSIVE_FORCE = "wallRepulsiveForce",
+
 	PROJECTILE_OWNER_TYPE = "projectileOwnerType",
 	PROJECTILE_COLOR = "projectileColor",
 	PROJECTILE_MAX_VELOCITY = "projectileMaxVelocity"
