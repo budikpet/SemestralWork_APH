@@ -5,6 +5,7 @@ export enum Messages {
 	PROJECTILE_COLLISION = "projectile_collision",
 
 	DEATH = "death",
+	PLAYER_DEATH = "player_death",
 	NEW_WAVE = "newWave"
 
 }
@@ -20,6 +21,7 @@ export enum Attributes {
 	CHARACTER_TYPE = "characterType",
 	HP = "healthPoints",							// How many projectiles can a character take
 	SCORE = "score",
+	DEATH_MSG = "deathMsg",
 	
 	WALL_TOP = "wallTop",
 	WALL_BOTTOM = "wallBottom",

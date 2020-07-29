@@ -47,14 +47,14 @@ export class DeathCheckerComponent extends ECSA.Component {
 		collisionMsg.character.assignAttribute(Attributes.HP, currHp - 1)
 		if (currHp - 1 <= 0) {
 			// Character died
-			
 			collisionMsg.character.stateId = States.DEAD
 			this.prepareDeathAnim(collisionMsg.character)
 		}
 	}
 
 	protected prepareDeathAnim(character: ECSA.Container) {
-		this.sendMessage(Messages.DEATH, new DeathMessage(character))
+		var deathMsgKey: string = character.getAttribute(Attributes.DEATH_MSG)
+		this.sendMessage(deathMsgKey, new DeathMessage(character))
 		
 		character.addComponent(
 			new ECSA.ChainComponent()

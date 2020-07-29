@@ -5,9 +5,9 @@ import { Attributes, HEIGHT, WALLS_SIZE, WIDTH, CharacterTypes, Messages, States
 import { PlayerWeaponComponent, EnemyWeaponComponent } from './components/weapon_component';
 import { GameModel } from './game_model';
 import { CollisionManagerComponent } from './components/collision_manager_component';
-import { DeathCheckerComponent } from './components/death_checker_component';
+import { DeathCheckerComponent, DeathMessage } from './components/death_checker_component';
 import { WaveManagerComponent } from './components/wave_manager_component';
-import { WaveCountdownComponent as WaveTextVisibilityComponent } from './components/ui_components';
+import { WaveCountdownComponent as WaveTextVisibilityComponent, FinalScoreScreen as FinalScoreScreenComponent } from './components/ui_components';
 
 /**
  * Creates all in-game objects.
@@ -15,10 +15,15 @@ import { WaveCountdownComponent as WaveTextVisibilityComponent } from './compone
 export class Factory {
 	static globalScale = 1;
 
-	initializeLevel(scene: ECSA.Scene) {
-		let gameModel = new GameModel()
+	resetGame(scene: ECSA.Scene) {
+		let gameModel: GameModel = scene.getGlobalAttribute(Attributes.GAME_MODEL)
+		gameModel.clear()
+		scene.clearScene()
 
-		scene.clearScene();
+		this.initializeLevel(scene, gameModel)
+	}
+
+	initializeLevel(scene: ECSA.Scene, gameModel: GameModel) {
 		scene.assignGlobalAttribute(Attributes.FACTORY, this);
 		scene.assignGlobalAttribute(Attributes.GAME_MODEL, gameModel);
 		
@@ -92,8 +97,9 @@ export class Factory {
 			.withAttribute(Attributes.PROJECTILE_COLOR, 0x43E214)
 			.withAttribute(Attributes.PROJECTILE_MAX_VELOCITY, 200*gameModel.baseVelocity)
 			.withAttribute(Attributes.CHARACTER_TYPE, CharacterTypes.PLAYER)
-			.withAttribute(Attributes.HP, 5000)
+			.withAttribute(Attributes.HP, 5)
 			.withAttribute(Attributes.SCORE, 0)
+			.withAttribute(Attributes.DEATH_MSG, Messages.PLAYER_DEATH)
 			.withState(States.ALIVE)
 			.withComponent(new PlayerMovementComponent(Attributes.DYNAMICS, gameModel))
 			.withComponent(new PlayerWeaponComponent())
@@ -119,6 +125,7 @@ export class Factory {
 			.withAttribute(Attributes.HP, 2)
 			.withAttribute(Attributes.PROJECTILE_MAX_VELOCITY, 2*gameModel.baseVelocity)
 			.withAttribute(Attributes.SCORE, 1)
+			.withAttribute(Attributes.DEATH_MSG, Messages.DEATH)
 			.withState(States.ALIVE)
 			.withComponent(new EnemyMovementComponent(Attributes.DYNAMICS, gameModel))
 			.withComponent(new EnemyWeaponComponent())
@@ -187,6 +194,24 @@ export class Factory {
 			)
 			.asText('text', "tst", new PIXI.TextStyle({ fill: '#FFFFFF', fontSize: 10 }))
 			.build();
+
+		// Game over
+		let uiGameOverTextStyle = new PIXI.TextStyle({ fill: '#FFFFFF', fontSize: 80, fontStyle: "italic", fontWeight: "bold" })
+		new ECSA.Builder(scene)
+			.relativePos(0.5, 0.5)
+			.anchor(0.5, 0.5)
+			.withComponent(
+				new ECSA.ChainComponent()
+					.execute((cmp) => {cmp.owner.visible = false})
+					.waitForMessage(Messages.PLAYER_DEATH)
+					.execute((cmp) => {cmp.owner.visible = true})
+					.waitTime(1500)
+					.addComponentAndWait(new FinalScoreScreenComponent())
+			)
+			.withParent(scene.stage)
+			.asText('gameOver', `Game over`, uiGameOverTextStyle)
+			.build()
+
 	}
 
 	addProjectile(character: ECSA.Container, gameModel: GameModel) {

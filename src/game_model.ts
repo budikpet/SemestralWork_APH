@@ -13,11 +13,10 @@ export class GameModel {
 	///
 	
 	gameSpeed: number = 10
-
+	bestScore: number = 0
 	protected _waveNum: number = 0
 
 	protected _player: ECSA.Container
-
 	protected _walls: Array<ECSA.Container>
 
 	// Map of all enemies <ID, EnemyObject>
@@ -26,7 +25,6 @@ export class GameModel {
 
 	// Map of all projectiles <ID, EnemyObject>
 	protected _projectiles: Map<number, ECSA.Container> = new Map()
-
 	protected _spawnpoints: Door[]
 
 	constructor() {
@@ -41,6 +39,15 @@ export class GameModel {
 			[bottomDoorStart, new PIXI.Point(bottomDoorStart.x + DOOR_LONG_SIDE, bottomDoorStart.y + DOOR_SHORT_SIDE)],
 			[leftDoorStart, new PIXI.Point(leftDoorStart.x + DOOR_SHORT_SIDE, leftDoorStart.y + DOOR_LONG_SIDE)]
 		]
+	}
+
+	public clear() {
+		this._waveNum = 0
+		this._player = null
+		this._walls = null
+		this._enemies.clear()
+		this._enemiesCnt = 0
+		this._projectiles.clear()
 	}
 
 	/// Getters/Setters
