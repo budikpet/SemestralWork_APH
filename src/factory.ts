@@ -9,6 +9,7 @@ import { DeathCheckerComponent } from './components/death_checker_component';
 import { WaveManagerComponent } from './components/wave_manager_component';
 import { WaveCountdownComponent as WaveTextVisibilityComponent, FinalScoreScreen as FinalScoreScreenComponent } from './components/ui_components';
 import { SpriteData, SpriteFrame, SpriteDimensions, SpriteAnimation } from './utils/sprite_utils';
+import { soundComponent } from './components/sound_component';
 
 /**
  * Creates all in-game objects.
@@ -36,6 +37,7 @@ export class Factory {
 		scene.assignGlobalAttribute(Names.FACTORY, this);
 		scene.assignGlobalAttribute(Names.GAME_MODEL, gameModel);
 		
+		scene.addGlobalComponent(soundComponent());
 		scene.addGlobalComponent(new ECSA.KeyInputComponent());
 		scene.addGlobalComponent(new ECSA.PointerInputComponent(false, true, true, true))
 		scene.addGlobalComponent(new CollisionManagerComponent())

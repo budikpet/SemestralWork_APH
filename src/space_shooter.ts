@@ -29,6 +29,10 @@ class SpaceShooter {
 			.reset()
 			.add(Assets.SPRITES, './assets/spaceShooter/graphics/spritesheet.json')
 			.add(Assets.SPRITESHEET, './assets/spaceShooter/graphics/spritesheet.png')
+			.add(Assets.SOUND_DEATH, './assets/spaceShooter/sounds/death.mp3')
+			.add(Assets.SOUND_FIRE, './assets/spaceShooter/sounds/fire.mp3')
+			.add(Assets.SOUND_HIT, './assets/spaceShooter/sounds/hit.mp3')
+			.add(Assets.SOUND_NEW_WAVE, './assets/spaceShooter/sounds/new_wave.mp3')
 			.load(() => this.onAssetsLoaded());
 	}
 

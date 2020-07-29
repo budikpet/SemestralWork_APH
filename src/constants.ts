@@ -1,5 +1,6 @@
 export enum Messages {
 	CREATE_PROJECTILE = "create_projectile",
+	PLAYER_SHOOT = "player_shoot",
 
 	WALL_COLLISION = "wall_collision",
 	PROJECTILE_COLLISION = "projectile_collision",
@@ -13,6 +14,10 @@ export enum Messages {
 export enum Assets {
 	SPRITES = 'file_sprites',
 	SPRITESHEET = 'file_spritesheet',
+	SOUND_DEATH = "soundDeath",
+	SOUND_FIRE = "soundFire",
+	SOUND_HIT = "soundHit",
+	SOUND_NEW_WAVE = "soundNewWave"
 }
 
 export enum Names {

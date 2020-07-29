@@ -169,4 +169,14 @@ export class PlayerWeaponComponent extends WeaponComponent {
 		return force
 	}
 
+	protected tryFire(absoluteTime: number) {
+		let res = super.tryFire(absoluteTime)
+
+		if(res) {
+			this.sendMessage(Messages.PLAYER_SHOOT)
+		}
+
+		return res
+	}
+
 }
