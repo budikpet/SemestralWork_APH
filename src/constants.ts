@@ -17,7 +17,7 @@ export enum Assets {
 
 export enum Names {
 	WALL = "wall",
-
+	DOOR = "door",
 	BACKGROUND = "background",
 	PLAYER = "player",
 	ENEMY = "enemy",
@@ -37,7 +37,9 @@ export enum Attributes {
 	HP = "healthPoints",							// How many projectiles can a character take
 	SCORE = "score",
 	DEATH_MSG_TYPE = "deathMsgTYPE",
+
 	WALL_REPULSIVE_FORCE = "wallRepulsiveForce",
+	WALL_ROTATION = "wallRotation",
 
 	PROJECTILE_OWNER_TYPE = "projectileOwnerType",
 	PROJECTILE_COLOR = "projectileColor",

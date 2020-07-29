@@ -43,6 +43,7 @@ export class Factory {
 		scene.addGlobalComponent(new WaveManagerComponent())
 
 		this.addWalls(scene, gameModel)
+		this.addDoors(scene, gameModel)
 		this.addBg(scene, gameModel)
 		this.addPlayer(scene, gameModel)
 		this.addUI(scene, gameModel)
@@ -77,29 +78,33 @@ export class Factory {
 		wallVertical.drawRect(0, 0, WALLS_SIZE, HEIGHT)
 		wallVertical.endFill()
 
-		let wallTop = new ECSA.Graphics(Names.WALL)
-		let wallBottom = new ECSA.Graphics(Names.WALL)
-		let wallLeft = new ECSA.Graphics(Names.WALL)
-		let wallRight = new ECSA.Graphics(Names.WALL)
+		let wallTop = new ECSA.Container(Names.WALL)
+		let wallBottom = new ECSA.Container(Names.WALL)
+		let wallLeft = new ECSA.Container(Names.WALL)
+		let wallRight = new ECSA.Container(Names.WALL)
 		gameModel.walls = [wallTop, wallBottom, wallLeft, wallRight]
 
 		wallTop.addChild(wallHorizontal.clone())
 		wallTop.assignAttribute(Attributes.WALL_REPULSIVE_FORCE, new ECSA.Vector(0, 1))
+		wallTop.assignAttribute(Attributes.WALL_ROTATION, 0)
 
 		wallBottom.addChild(wallHorizontal.clone())
 		wallBottom.assignAttribute(Attributes.WALL_REPULSIVE_FORCE, new ECSA.Vector(0, -1))
+		wallBottom.assignAttribute(Attributes.WALL_ROTATION, Math.PI)
 
 		wallLeft.addChild(wallVertical.clone())
 		wallLeft.assignAttribute(Attributes.WALL_REPULSIVE_FORCE, new ECSA.Vector(1, 0))
+		wallLeft.assignAttribute(Attributes.WALL_ROTATION, 3*Math.PI/2)
 
 		wallRight.addChild(wallVertical.clone())
 		wallRight.assignAttribute(Attributes.WALL_REPULSIVE_FORCE, new ECSA.Vector(-1, 0))
+		wallRight.assignAttribute(Attributes.WALL_ROTATION, Math.PI/2)
 
 		new ECSA.Builder(scene).withParent(scene.stage).scale(Factory.globalScale).relativePos(0, 0).buildInto(wallTop)
 		new ECSA.Builder(scene).withParent(scene.stage).scale(Factory.globalScale).globalPos(0, HEIGHT - WALLS_SIZE).buildInto(wallBottom)
 		new ECSA.Builder(scene).withParent(scene.stage).scale(Factory.globalScale).relativePos(0, 0).buildInto(wallLeft)
 		new ECSA.Builder(scene).withParent(scene.stage).scale(Factory.globalScale).globalPos(WIDTH - WALLS_SIZE, 0).buildInto(wallRight)
-		
+
 		// Make outer bound of the game space
 		let outerPartSize = WALLS_SIZE/5
 		let wallsShape = new ECSA.Graphics()
@@ -108,6 +113,57 @@ export class Factory {
 		wallsShape.endFill()
 
 		new ECSA.Builder(scene).withParent(scene.stage).scale(Factory.globalScale).relativePos(0, 0).buildInto(wallsShape)
+	}
+
+	addDoors(scene: ECSA.Scene, gameModel: GameModel) {
+		let spriteFrame: SpriteFrame = this.spritesData.frames.door
+
+		let topDoor: ECSA.Sprite = new ECSA.Builder(scene)
+			.scale(Factory.globalScale)
+			.localPos(WIDTH/2, WALLS_SIZE/2)
+			.anchor(0.5, 0.5)
+			.asSprite(this.createTexture(spriteFrame), Names.DOOR)
+			.withParent(scene.stage)
+			.build();
+
+		topDoor.width = WIDTH*1/4
+		topDoor.height = WALLS_SIZE
+
+		let bottomDoor: ECSA.Sprite = new ECSA.Builder(scene)
+			.scale(Factory.globalScale)
+			.localPos(WIDTH/2, HEIGHT - WALLS_SIZE/2)
+			.anchor(0.5, 0.5)
+			.asSprite(this.createTexture(spriteFrame), Names.DOOR)
+			.withParent(scene.stage)
+			.build();
+
+		bottomDoor.width = WIDTH*1/4
+		bottomDoor.height = WALLS_SIZE
+		bottomDoor.rotation = Math.PI
+
+		let rightDoor: ECSA.Sprite = new ECSA.Builder(scene)
+			.scale(Factory.globalScale)
+			.localPos(WIDTH - WALLS_SIZE/2, HEIGHT/2)
+			.anchor(0.5, 0.5)
+			.asSprite(this.createTexture(spriteFrame), Names.DOOR)
+			.withParent(scene.stage)
+			.build();
+
+		rightDoor.width = HEIGHT*1/4
+		rightDoor.height = WALLS_SIZE
+		rightDoor.rotation = Math.PI/2
+
+		let leftDoor: ECSA.Sprite = new ECSA.Builder(scene)
+			.scale(Factory.globalScale)
+			.localPos(WALLS_SIZE/2, HEIGHT/2)
+			.anchor(0.5, 0.5)
+			.asSprite(this.createTexture(spriteFrame), Names.DOOR)
+			.withParent(scene.stage)
+			.build();
+
+		leftDoor.width = HEIGHT*1/4
+		leftDoor.height = WALLS_SIZE
+		leftDoor.rotation = 3*Math.PI/2
 	}
 
 	addPlayer(scene: ECSA.Scene, gameModel: GameModel) {

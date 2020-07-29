@@ -20,44 +20,44 @@
 				"h": 344
 			}
 		},
-		"soldier_01": {
-			"frame": {
-				"x": 398,
-				"y": 0,
-				"w": 38,
-				"h": 22
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
-				"x": 0,
-				"y": 0,
-				"w": 38,
-				"h": 22
-			},
-			"sourceSize": {
-				"w": 38,
-				"h": 22
-			}
-		},
-		"wall": {
+		"door": {
 			"frame": {
 				"x": 0,
 				"y": 344,
-				"w": 476,
-				"h": 33
+				"w": 137,
+				"h": 30
 			},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 476,
-				"h": 33
+				"w": 137,
+				"h": 30
 			},
 			"sourceSize": {
-				"w": 476,
-				"h": 33
+				"w": 137,
+				"h": 30
+			}
+		},
+		"soldier_01": {
+			"frame": {
+				"x": 137,
+				"y": 344,
+				"w": 38,
+				"h": 22
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 38,
+				"h": 22
+			},
+			"sourceSize": {
+				"w": 38,
+				"h": 22
 			}
 		}
 	},
@@ -68,10 +68,10 @@
 		"image": "spritesheet.png",
 		"format": "RGBA8888",
 		"size": {
-			"w": 476,
-			"h": 377
+			"w": 398,
+			"h": 374
 		},
 		"scale": "1",
-		"smartupdate": "$TexturePacker:SmartUpdate:faae1746d1c483997fa51a09f9516468:6ef8a73a48889c9cba0f5105973b3151:729adc6043343cfda41c447ce8f464d6$"
+		"smartupdate": "$TexturePacker:SmartUpdate:ed99ed9e91bea7925034f69e8c50d2da:0bf29fc09f4a25f87a4d6d3c0b720a26:729adc6043343cfda41c447ce8f464d6$"
 	}
 }
