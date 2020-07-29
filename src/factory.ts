@@ -180,7 +180,7 @@ export class Factory {
 			.withAttribute(Attributes.PROJECTILE_COLOR, 0x43E214)
 			.withAttribute(Attributes.PROJECTILE_MAX_VELOCITY, 200*gameModel.baseVelocity)
 			.withAttribute(Attributes.CHARACTER_TYPE, CharacterTypes.PLAYER)
-			.withAttribute(Attributes.HP, 500)
+			.withAttribute(Attributes.HP, 10)
 			.withAttribute(Attributes.SCORE, 0)
 			.withAttribute(Attributes.DEATH_MSG_TYPE, Messages.PLAYER_DEATH)
 			.withState(States.ALIVE)
@@ -191,16 +191,12 @@ export class Factory {
 	}
 
 	addEnemy(scene: ECSA.Scene, gameModel: GameModel, position: ECSA.Vector) {
-		let enemy = new ECSA.Graphics(Names.ENEMY);
-		enemy.beginFill(0xE56987);
-		enemy.drawPolygon([-10, -10, -10, 10, 15, 0]);
-		enemy.endFill();
-		gameModel.addEnemy(enemy)
-
-		new ECSA.Builder(scene)
+		let spriteFrame: SpriteFrame = this.spritesData.frames.enemy_soldier_01
+		
+		let enemy = new ECSA.Builder(scene)
 			.scale(Factory.globalScale)
 			.localPos(position.x, position.y)
-			// .asSprite(this.createTexture(model.getSpriteInfo(Names.PADDLE)), Names.PADDLE)
+			.asSprite(this.createTexture(spriteFrame), Names.ENEMY)
 			.withAttribute(Attributes.ATTACK_FREQUENCY, gameModel.baseAttackFrequency*1/4)
 			.withAttribute(Attributes.MAX_VELOCITY, gameModel.baseVelocity)
 			.withAttribute(Attributes.MAX_ACCELERATION, gameModel.baseAcceleration)
@@ -213,7 +209,9 @@ export class Factory {
 			.withComponent(new EnemyMovementComponent(Attributes.DYNAMICS, gameModel))
 			.withComponent(new EnemyWeaponComponent())
 			.withParent(scene.stage)
-			.buildInto(enemy);
+			.build();
+
+		gameModel.addEnemy(enemy)
 	}
 
 	removeCharacter(character: ECSA.Container, gameModel: GameModel) {
