@@ -8,7 +8,7 @@ import { CollisionManagerComponent } from './components/collision_manager_compon
 import { DeathCheckerComponent, DeathMessage } from './components/death_checker_component';
 import { WaveManagerComponent } from './components/wave_manager_component';
 import { WaveCountdownComponent as WaveTextVisibilityComponent, FinalScoreScreen as FinalScoreScreenComponent } from './components/ui_components';
-import SpriteData from './utils/sprite_utils';
+import { SpriteData, SpriteFrame, SpriteDimensions, SpriteAnimation } from './utils/sprite_utils';
 
 /**
  * Creates all in-game objects.
@@ -16,13 +16,11 @@ import SpriteData from './utils/sprite_utils';
 export class Factory {
 	static globalScale = 1;
 
-	private spritesData: {
-		[key: string]: SpriteData
-	};
+	private spritesData: SpriteData
 	private spriteSheet: PIXI.BaseTexture;
 
 	constructor(spritesData: any) {
-		this.spritesData = spritesData.frames;
+		this.spritesData = spritesData
 		this.spriteSheet = PIXI.BaseTexture.from(Assets.SPRITESHEET);
 	}
 
@@ -44,9 +42,24 @@ export class Factory {
 		scene.addGlobalComponent(new DeathCheckerComponent())
 		scene.addGlobalComponent(new WaveManagerComponent())
 
+		this.addBg(scene, gameModel)
 		this.addWalls(scene, gameModel)
 		this.addPlayer(scene, gameModel)
 		this.addUI(scene, gameModel)
+	}
+
+	addBg(scene: ECSA.Scene, gameModel: GameModel) {
+		let spriteFrame: SpriteFrame = this.spritesData.frames.background
+
+		let background: ECSA.Sprite = new ECSA.Builder(scene)
+			.scale(Factory.globalScale)
+			.localPos(WALLS_SIZE, WALLS_SIZE)
+			.asSprite(this.createTexture(spriteFrame), Attributes.BACKGROUND)
+			.withParent(scene.stage)
+			.build();
+
+		background.width = WIDTH - 2*WALLS_SIZE
+		background.height = HEIGHT - 2*WALLS_SIZE
 	}
 
 	addWalls(scene: ECSA.Scene, gameModel: GameModel) {
@@ -86,36 +99,37 @@ export class Factory {
 	}
 
 	addPlayer(scene: ECSA.Scene, gameModel: GameModel) {
-		let builder = new ECSA.Builder(scene);
+		// let player = new ECSA.Graphics(Attributes.PLAYER);
+		// gameModel.player = player
+		// player.beginFill(0x47a1d5);
+		// player.drawPolygon([-10, -10, -10, 10, 15, 0]);
+		// // player.moveTo(100, 100)
+		// // player.lineTo(110, 100);
+		// // player.lineTo(105, 80);
+		// // player.lineTo(100, 100);
+		// player.endFill();
 
-		let player = new ECSA.Graphics(Attributes.PLAYER);
-		gameModel.player = player
-		player.beginFill(0x47a1d5);
-		player.drawPolygon([-10, -10, -10, 10, 15, 0]);
-		// player.moveTo(100, 100)
-		// player.lineTo(110, 100);
-		// player.lineTo(105, 80);
-		// player.lineTo(100, 100);
-		player.endFill();
+		let spriteFrame: SpriteFrame = this.spritesData.frames.soldier_01
 
-		builder
+		gameModel.player = new ECSA.Builder(scene)
 			.scale(Factory.globalScale)
 			.relativePos(0.5, 0.5)
-			// .asSprite(this.createTexture(model.getSpriteInfo(Names.PADDLE)), Names.PADDLE)
+			.anchor(0.5, 0.5)
+			.asSprite(this.createTexture(spriteFrame), Attributes.PLAYER)
 			.withAttribute(Attributes.ATTACK_FREQUENCY, 5*gameModel.baseAttackFrequency)
 			.withAttribute(Attributes.MAX_VELOCITY, 10*gameModel.baseVelocity)
 			.withAttribute(Attributes.MAX_ACCELERATION, 100*gameModel.baseAcceleration)
 			.withAttribute(Attributes.PROJECTILE_COLOR, 0x43E214)
 			.withAttribute(Attributes.PROJECTILE_MAX_VELOCITY, 200*gameModel.baseVelocity)
 			.withAttribute(Attributes.CHARACTER_TYPE, CharacterTypes.PLAYER)
-			.withAttribute(Attributes.HP, 5)
+			.withAttribute(Attributes.HP, 500)
 			.withAttribute(Attributes.SCORE, 0)
 			.withAttribute(Attributes.DEATH_MSG, Messages.PLAYER_DEATH)
 			.withState(States.ALIVE)
 			.withComponent(new PlayerMovementComponent(Attributes.DYNAMICS, gameModel))
 			.withComponent(new PlayerWeaponComponent())
 			.withParent(scene.stage)
-			.buildInto(player);
+			.build();
 	}
 
 	addEnemy(scene: ECSA.Scene, gameModel: GameModel, position: ECSA.Vector) {
@@ -248,9 +262,10 @@ export class Factory {
 			.buildInto(projectile)
 	}
 
-	private createTexture(spriteInfo: any): PIXI.Texture {
+	private createTexture(spriteFrame: SpriteFrame): PIXI.Texture {
 		let texture = new PIXI.Texture(this.spriteSheet);
-		texture.frame = new PIXI.Rectangle(spriteInfo.x, spriteInfo.y, spriteInfo.w, spriteInfo.h);
+		let dimensions: SpriteDimensions = spriteFrame.frame
+		texture.frame = new PIXI.Rectangle(dimensions.x, dimensions.y, dimensions.w, dimensions.h);
 		return texture;
 	}
 }

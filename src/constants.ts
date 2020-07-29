@@ -31,6 +31,7 @@ export enum Attributes {
 	WALL_RIGHT = "wallRight",
 	WALL_REPULSIVE_FORCE = "wallRepulsiveForce",
 
+	BACKGROUND = "background",
 	PLAYER = "player",
 	ENEMY = "enemy",
 

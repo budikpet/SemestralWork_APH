@@ -1,21 +1,21 @@
-export interface Animation {
+export interface SpriteAnimation {
 
 }
 
-export interface Dimensions {
+export interface SpriteDimensions {
 	x: number;
 	y: number;
 	w: number;
 	h: number;
 }
 
-export interface Frame {
-	frameDimensions: Dimensions
+export interface SpriteFrame {
+	frame: SpriteDimensions
 	rotated: boolean
 	trimmed: boolean
 }
 
-export default interface SpriteData {
-	frames: {[key: string]: Frame}
-	animations: {[key: string]: Animation}
+export interface SpriteData {
+	frames: {[key: string]: SpriteFrame}
+	animations: {[key: string]: SpriteAnimation}
 }
