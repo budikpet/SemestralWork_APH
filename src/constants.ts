@@ -16,10 +16,7 @@ export enum Assets {
 }
 
 export enum Names {
-	WALL_TOP = "wallTop",
-	WALL_BOTTOM = "wallBottom",
-	WALL_LEFT = "wallLeft",
-	WALL_RIGHT = "wallRight",
+	WALL = "wall",
 
 	BACKGROUND = "background",
 	PLAYER = "player",

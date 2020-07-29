@@ -42,8 +42,8 @@ export class Factory {
 		scene.addGlobalComponent(new DeathCheckerComponent())
 		scene.addGlobalComponent(new WaveManagerComponent())
 
-		this.addBg(scene, gameModel)
 		this.addWalls(scene, gameModel)
+		this.addBg(scene, gameModel)
 		this.addPlayer(scene, gameModel)
 		this.addUI(scene, gameModel)
 	}
@@ -63,39 +63,50 @@ export class Factory {
 	}
 
 	addWalls(scene: ECSA.Scene, gameModel: GameModel) {
-		let wallTop = new ECSA.Graphics(Names.WALL_TOP)
-		let wallBottom = new ECSA.Graphics(Names.WALL_BOTTOM)
-		let wallLeft = new ECSA.Graphics(Names.WALL_LEFT)
-		let wallRight = new ECSA.Graphics(Names.WALL_RIGHT)
-		let wallColor = 0xBBBCBF
+		let outerWallColor = 0x738394
+		let innerWallColor = 0x3d4c5c
+
+		// Create walls
+
+		let wallTop = new ECSA.Graphics(Names.WALL)
+		let wallBottom = new ECSA.Graphics(Names.WALL)
+		let wallLeft = new ECSA.Graphics(Names.WALL)
+		let wallRight = new ECSA.Graphics(Names.WALL)
 		gameModel.walls = [wallTop, wallBottom, wallLeft, wallRight]
 
-		wallTop.beginFill(wallColor);
+		wallTop.beginFill(outerWallColor);
 		wallTop.drawRect(0, 0, WIDTH, WALLS_SIZE)
 		wallTop.endFill()
 		wallTop.assignAttribute(Attributes.WALL_REPULSIVE_FORCE, new ECSA.Vector(0, 1))
 
-		wallBottom.beginFill(wallColor);
+		wallBottom.beginFill(outerWallColor);
 		wallBottom.drawRect(0, 0, WIDTH, WALLS_SIZE)
 		wallBottom.endFill()
 		wallBottom.assignAttribute(Attributes.WALL_REPULSIVE_FORCE, new ECSA.Vector(0, -1))
 
-		wallLeft.beginFill(wallColor);
+		wallLeft.beginFill(outerWallColor);
 		wallLeft.drawRect(0, 0, WALLS_SIZE, HEIGHT)
 		wallLeft.endFill()
 		wallLeft.assignAttribute(Attributes.WALL_REPULSIVE_FORCE, new ECSA.Vector(1, 0))
 
-		wallRight.beginFill(wallColor);
+		wallRight.beginFill(outerWallColor);
 		wallRight.drawRect(0, 0, WALLS_SIZE, HEIGHT)
 		wallRight.endFill()
 		wallRight.assignAttribute(Attributes.WALL_REPULSIVE_FORCE, new ECSA.Vector(-1, 0))
-
 
 		new ECSA.Builder(scene).withParent(scene.stage).scale(Factory.globalScale).relativePos(0, 0).buildInto(wallTop)
 		new ECSA.Builder(scene).withParent(scene.stage).scale(Factory.globalScale).globalPos(0, HEIGHT - WALLS_SIZE).buildInto(wallBottom)
 		new ECSA.Builder(scene).withParent(scene.stage).scale(Factory.globalScale).relativePos(0, 0).buildInto(wallLeft)
 		new ECSA.Builder(scene).withParent(scene.stage).scale(Factory.globalScale).globalPos(WIDTH - WALLS_SIZE, 0).buildInto(wallRight)
-			
+		
+		// Make outer bound of the game space
+		let outerPartSize = WALLS_SIZE/5
+		let wallsShape = new ECSA.Graphics()
+		wallsShape.beginFill(innerWallColor);
+		wallsShape.drawRect(outerPartSize, outerPartSize, WIDTH - 2*outerPartSize, HEIGHT - 2*outerPartSize)
+		wallsShape.endFill()
+
+		new ECSA.Builder(scene).withParent(scene.stage).scale(Factory.globalScale).relativePos(0, 0).buildInto(wallsShape)
 	}
 
 	addPlayer(scene: ECSA.Scene, gameModel: GameModel) {
