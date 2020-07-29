@@ -1,29 +1,9 @@
 {
 	"frames": {
-		"Soldier_01.png": {
+		"background": {
 			"frame": {
-				"x": 1,
-				"y": 1,
-				"w": 40,
-				"h": 24
-			},
-			"rotated": false,
-			"trimmed": false,
-			"spriteSourceSize": {
 				"x": 0,
 				"y": 0,
-				"w": 40,
-				"h": 24
-			},
-			"sourceSize": {
-				"w": 40,
-				"h": 24
-			}
-		},
-		"background.png": {
-			"frame": {
-				"x": 43,
-				"y": 1,
 				"w": 398,
 				"h": 344
 			},
@@ -40,10 +20,30 @@
 				"h": 344
 			}
 		},
-		"wall.png": {
+		"Soldier_01": {
 			"frame": {
-				"x": 443,
-				"y": 1,
+				"x": 398,
+				"y": 0,
+				"w": 40,
+				"h": 24
+			},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {
+				"x": 0,
+				"y": 0,
+				"w": 40,
+				"h": 24
+			},
+			"sourceSize": {
+				"w": 40,
+				"h": 24
+			}
+		},
+		"wall": {
+			"frame": {
+				"x": 0,
+				"y": 344,
 				"w": 476,
 				"h": 33
 			},
@@ -61,15 +61,17 @@
 			}
 		}
 	},
+	"animations": {},
 	"meta": {
-		"app": "http://www.codeandweb.com/texturepacker",
+		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "1.0",
-		"image": "spritesheet.png",
+		"image": "spritesheet",
 		"format": "RGBA8888",
 		"size": {
-			"w": 920,
-			"h": 346
+			"w": 476,
+			"h": 377
 		},
-		"scale": "1"
+		"scale": "1",
+		"smartupdate": "$TexturePacker:SmartUpdate:54a1de34c511223f763d5182114fec91:dd92475eff8342ce25ee2cff6153a60e:729adc6043343cfda41c447ce8f464d6$"
 	}
 }
