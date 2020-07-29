@@ -11,6 +11,8 @@ export enum Messages {
 }
 
 export enum Assets {
+	SPRITES = 'file_sprites',
+	SPRITESHEET = 'file_spritesheet',
 }
 
 export enum Attributes {

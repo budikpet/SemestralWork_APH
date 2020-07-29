@@ -1,19 +1,30 @@
 import * as ECSA from '../libs/pixi-component';
 import * as PIXI from 'pixi.js';
 import { PlayerMovementComponent, ProjectileMovementComponent, EnemyMovementComponent } from './components/movement_component';
-import { Attributes, HEIGHT, WALLS_SIZE, WIDTH, CharacterTypes, Messages, States } from './constants';
+import { Attributes, HEIGHT, WALLS_SIZE, WIDTH, CharacterTypes, Messages, States, Assets } from './constants';
 import { PlayerWeaponComponent, EnemyWeaponComponent } from './components/weapon_component';
 import { GameModel } from './game_model';
 import { CollisionManagerComponent } from './components/collision_manager_component';
 import { DeathCheckerComponent, DeathMessage } from './components/death_checker_component';
 import { WaveManagerComponent } from './components/wave_manager_component';
 import { WaveCountdownComponent as WaveTextVisibilityComponent, FinalScoreScreen as FinalScoreScreenComponent } from './components/ui_components';
+import SpriteData from './utils/sprite_utils';
 
 /**
  * Creates all in-game objects.
  */
 export class Factory {
 	static globalScale = 1;
+
+	private spritesData: {
+		[key: string]: SpriteData
+	};
+	private spriteSheet: PIXI.BaseTexture;
+
+	constructor(spritesData: any) {
+		this.spritesData = spritesData.frames;
+		this.spriteSheet = PIXI.BaseTexture.from(Assets.SPRITESHEET);
+	}
 
 	resetGame(scene: ECSA.Scene) {
 		let gameModel: GameModel = scene.getGlobalAttribute(Attributes.GAME_MODEL)
@@ -235,5 +246,11 @@ export class Factory {
 			.withState(States.ALIVE)
 			.withParent(character.scene.stage)
 			.buildInto(projectile)
+	}
+
+	private createTexture(spriteInfo: any): PIXI.Texture {
+		let texture = new PIXI.Texture(this.spriteSheet);
+		texture.frame = new PIXI.Rectangle(spriteInfo.x, spriteInfo.y, spriteInfo.w, spriteInfo.h);
+		return texture;
 	}
 }
