@@ -68,17 +68,18 @@ export class Factory {
 	addWalls(scene: ECSA.Scene, gameModel: GameModel) {
 		let outerWallColor = 0x738394
 		let innerWallColor = 0x3d4c5c
+		let outerPartSize = WALLS_SIZE/5
 
 		// Create walls
 		let wallHorizontal = new ECSA.Graphics(Names.WALL)
-		wallHorizontal.beginFill(outerWallColor);
-		wallHorizontal.drawRect(0, 0, WIDTH, WALLS_SIZE)
-		wallHorizontal.endFill()
+		wallHorizontal.beginFill(outerWallColor)
+			.drawRect(0, 0, WIDTH, WALLS_SIZE)
+			.endFill()
 
 		let wallVertical = new ECSA.Graphics(Names.WALL)
-		wallVertical.beginFill(outerWallColor);
-		wallVertical.drawRect(0, 0, WALLS_SIZE, HEIGHT)
-		wallVertical.endFill()
+		wallVertical.beginFill(outerWallColor)
+			.drawRect(0, 0, WALLS_SIZE, HEIGHT)
+			.endFill()
 
 		let wallTop = new ECSA.Container(Names.WALL)
 		let wallBottom = new ECSA.Container(Names.WALL)
@@ -108,11 +109,10 @@ export class Factory {
 		new ECSA.Builder(scene).withParent(scene.stage).scale(Factory.globalScale).globalPos(WIDTH - WALLS_SIZE, 0).buildInto(wallRight)
 
 		// Make outer bound of the game space
-		let outerPartSize = WALLS_SIZE/5
 		let wallsShape = new ECSA.Graphics()
-		wallsShape.beginFill(innerWallColor);
-		wallsShape.drawRect(outerPartSize, outerPartSize, WIDTH - 2*outerPartSize, HEIGHT - 2*outerPartSize)
-		wallsShape.endFill()
+		wallsShape.beginFill(innerWallColor)
+			.drawRect(outerPartSize, outerPartSize, WIDTH - 2*outerPartSize, HEIGHT - 2*outerPartSize)
+			.endFill()
 
 		new ECSA.Builder(scene).withParent(scene.stage).scale(Factory.globalScale).relativePos(0, 0).buildInto(wallsShape)
 	}
@@ -302,9 +302,9 @@ export class Factory {
 		var velocity: number = character.getAttribute(Attributes.PROJECTILE_MAX_VELOCITY)
 		velocity = (velocity != null) ? velocity : gameModel.baseVelocity
 		let projectile = new ECSA.Graphics(Names.PROJECTILE);
-		projectile.beginFill((color != null) ? color : 0xFFFFED);
-		projectile.drawRect(0, 0, 10, 5)
-		projectile.endFill();
+		projectile.beginFill((color != null) ? color : 0xFFFFED)
+			.drawRect(0, 0, 10, 5)
+			.endFill();
 
 		gameModel.addProjectile(projectile)
 
