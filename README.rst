@@ -2,6 +2,16 @@ APH shooter
 ======================
 A game made as a MI-APH Semestral work.
 
+Architecture diagram
+---------------------------
+
+.. figure:: docs/architecture_model.svg
+	:align: center
+	:width: 500px
+	:alt: architecture model image
+
+	*Figure: Diagramme of the game´s architecture.*
+
 How to setup
 --------------
 #. Have npm installed
