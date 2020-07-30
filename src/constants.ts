@@ -62,11 +62,11 @@ export enum CharacterTypes {
 	NEUTRAL
 }
 
-export const WALLS_SIZE = 50
-export const DOOR_WIDTH = 50
-export const DOOR_HEIGHT = WALLS_SIZE / 2
 export var WIDTH = 800
 export var HEIGHT = 600
+export const WALLS_SIZE = WIDTH/16
+export const DOOR_WIDTH = WIDTH/16
+export const DOOR_HEIGHT = WALLS_SIZE / 2
 
 // height of the scene will be set to 25 units for the purpose of better calculations
 export const SCENE_HEIGHT = 25;

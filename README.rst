@@ -15,10 +15,10 @@ It is a shooter. The player's goal is to survive as long as possible and get hig
 
 The map is of fixed size. Players can't go outside of bounds of the map. Enemies spawn in waves.
 
-.. figure:: docs/space_shooter_similar_sample.png
+.. figure:: docs/space_shooter_sample.png
 	:align: center
 	:width: 500px
-	:alt: similar game sample img
+	:alt: sample game img
 
 	*Figure: What gameplay looks like.*
 
@@ -27,4 +27,4 @@ ______________
 
 :Movement: W/A/S/D
 :Shooting: Left mouse button
-:Player rotation: Mouse
+:Player rotation: Player always points to the position of the mouse

@@ -55,7 +55,6 @@ export class DeathCheckerComponent extends ECSA.Component {
 
 	protected prepareDeathAnim(character: ECSA.Container) {
 		var deathMsgKey: string = character.getAttribute(Attributes.DEATH_MSG_TYPE)
-		console.log(`${this.gameModel.player.stateId === States.DEAD}`)
 		this.sendMessage(deathMsgKey, new DeathMessage(character))
 		
 		character.addComponent(
