@@ -7,10 +7,10 @@ Architecture diagram
 
 .. figure:: docs/architecture_model.svg
 	:align: center
-	:width: 500px
+	:width: 1000px
 	:alt: architecture model image
 
-	*Figure: Diagramme of the game´s architecture.*
+	*Figure: Diagram of the game´s architecture.*
 
 How to setup
 --------------
