@@ -4,6 +4,7 @@ import { ProjectileCollisionMsg } from './collision_manager_component';
 import { GameModel } from '../game_model';
 import { DeathAnimation } from './animations_components';
 import { Factory } from '../factory';
+import { State } from 'pixi.js';
 
 export class DeathMessage {
 	id: number
@@ -34,7 +35,7 @@ export class DeathCheckerComponent extends ECSA.Component {
 	}
 
 	protected handleProjectileCollision(collisionMsg: ProjectileCollisionMsg) {
-		if(collisionMsg.projectile.stateId === States.DEAD) {
+		if(collisionMsg.projectile.stateId === States.DEAD || collisionMsg.character.stateId === States.DEAD) {
 			return
 		}
 
@@ -54,6 +55,7 @@ export class DeathCheckerComponent extends ECSA.Component {
 
 	protected prepareDeathAnim(character: ECSA.Container) {
 		var deathMsgKey: string = character.getAttribute(Attributes.DEATH_MSG_TYPE)
+		console.log(`${this.gameModel.player.stateId === States.DEAD}`)
 		this.sendMessage(deathMsgKey, new DeathMessage(character))
 		
 		character.addComponent(
