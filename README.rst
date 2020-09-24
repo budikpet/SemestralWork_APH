@@ -16,7 +16,7 @@ How to setup
 --------------
 #. Have npm installed
 #. Run :code:`npm install` to install all needed dependencies.
-#. Run :code:`npm run` to start the dev-server.
+#. Run :code:`npm start` to start the dev-server.
 #. Navigate to :code:`localhost:1234/index.html` to play the game.
 
 About the game
