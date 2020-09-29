@@ -11,7 +11,8 @@
 	"devDependencies": {
 		"pug": "2.0.4",
 		"sass": "1.23.0",
-		"tslint": "5.20.0"
+		"tslint": "5.20.0",
+		"vivus": "0.4.5"
 	},
 	"dependencies": {
 		"@types/matter-js": "0.10.4",
@@ -25,7 +26,6 @@
 		"mathjax-node": "2.1.1",
 		"poly-decomp": "0.3.0",
 		"ts-behavior-tree": "1.2.0",
-		"typescript-collections": "1.3.3",
-		"vivus": "0.4.5"
+		"typescript-collections": "1.3.3"
 	}
 }
