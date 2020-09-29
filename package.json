@@ -9,15 +9,15 @@
 		"clean_materials": "node scripts/clean-materials.js"
 	},
 	"devDependencies": {
-		"@types/matter-js": "0.10.4",
-		"@types/vivus": "0.4.0",
-		"parcel-bundler": "1.12.3",
-		"parcel-plugin-json-url-loader": "0.1.2",
 		"pug": "2.0.4",
 		"sass": "1.23.0",
 		"tslint": "5.20.0"
 	},
 	"dependencies": {
+		"@types/matter-js": "0.10.4",
+		"@types/vivus": "0.4.0",
+		"parcel-bundler": "1.12.3",
+		"parcel-plugin-json-url-loader": "0.1.2",
 		"typescript": "3.6.3",
 		"matter-js": "0.14.2",
 		"pixi-sound": "3.0.3",
