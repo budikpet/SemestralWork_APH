@@ -2,6 +2,8 @@ APH shooter
 ======================
 A game made as a MI-APH Semestral work.
 
+It is deployed at: https://semestral-work-aph.herokuapp.com/
+
 Architecture diagram
 ---------------------------
 
