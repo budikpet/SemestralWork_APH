@@ -263,19 +263,32 @@ export class Factory {
 			.asText('text', `Wave ${gameModel.waveNum + 1}`, uiWaveTextStyle)
 			.build()
 		
-		// Score & HP
+		// HP
 		new ECSA.Builder(scene)
-			.localPos(WIDTH*1/6, WALLS_SIZE/2)
+			.localPos(WIDTH*1/6, WALLS_SIZE*2/3)
+			.anchor(0.5)
+			.withParent(scene.stage)
+			.withComponent(new ECSA.GenericComponent('scoreHP')
+				.doOnUpdate((cmp, delta, absolute) => {
+					let hp = `HP left: ${gameModel.player.getAttribute(Attributes.HP)}`
+					cmp.owner.asText().text = `${hp}`
+				})
+			)
+			.asText('text', "tst", new PIXI.TextStyle({ fill: '#FFFFFF', fontSize: 25 }))
+			.build();
+
+		// Score
+		new ECSA.Builder(scene)
+			.localPos(WIDTH*5/6, WALLS_SIZE*2/3)
 			.anchor(0.5)
 			.withParent(scene.stage)
 			.withComponent(new ECSA.GenericComponent('scoreHP')
 				.doOnUpdate((cmp, delta, absolute) => {
 					let score = `Score: ${gameModel.player.getAttribute(Attributes.SCORE)}`
-					let hp = `HP left: ${gameModel.player.getAttribute(Attributes.HP)}`
-					cmp.owner.asText().text = `${hp}\n${score}`
+					cmp.owner.asText().text = `${score}`
 				})
 			)
-			.asText('text', "tst", new PIXI.TextStyle({ fill: '#FFFFFF', fontSize: 10 }))
+			.asText('text', "tst", new PIXI.TextStyle({ fill: '#FFFFFF', fontSize: 25 }))
 			.build();
 
 		// Game over
