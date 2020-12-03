@@ -204,6 +204,7 @@ export class Factory {
 			.withAttribute(Attributes.MAX_ACCELERATION, gameModel.baseAcceleration)
 			.withAttribute(Attributes.CHARACTER_TYPE, CharacterTypes.ENEMY)
 			.withAttribute(Attributes.HP, 2)
+			.withAttribute(Attributes.PROJECTILE_COLOR, 0xa600ff)
 			.withAttribute(Attributes.PROJECTILE_MAX_VELOCITY, 2*gameModel.baseVelocity)
 			.withAttribute(Attributes.SCORE, 1)
 			.withAttribute(Attributes.DEATH_MSG_TYPE, Messages.DEATH)
@@ -249,7 +250,8 @@ export class Factory {
 		// }
 
 		// UI Wave initializer
-		let uiWaveTextStyle = new PIXI.TextStyle({ fill: '#FFFFFF', fontSize: 55, fontStyle: "italic", fontWeight: "bold" })
+		let textColor = '#3a854e'
+		let uiWaveTextStyle = new PIXI.TextStyle({ fill: textColor, fontSize: 55, fontStyle: "italic", fontWeight: "bold" })
 		new ECSA.Builder(scene)
 			.relativePos(0.5, 0.5)
 			.anchor(0.5, 0.5)
@@ -274,7 +276,7 @@ export class Factory {
 					cmp.owner.asText().text = `${hp}`
 				})
 			)
-			.asText('text', "tst", new PIXI.TextStyle({ fill: '#FFFFFF', fontSize: 25 }))
+			.asText('text', "tst", new PIXI.TextStyle({ fill: textColor, fontSize: 25 }))
 			.build();
 
 		// Score
@@ -288,11 +290,11 @@ export class Factory {
 					cmp.owner.asText().text = `${score}`
 				})
 			)
-			.asText('text', "tst", new PIXI.TextStyle({ fill: '#FFFFFF', fontSize: 25 }))
+			.asText('text', "tst", new PIXI.TextStyle({ fill: textColor, fontSize: 25 }))
 			.build();
 
 		// Game over
-		let uiGameOverTextStyle = new PIXI.TextStyle({ fill: '#FFFFFF', fontSize: 80, fontStyle: "italic", fontWeight: "bold" })
+		let uiGameOverTextStyle = new PIXI.TextStyle({ fill: textColor, fontSize: 80, fontStyle: "italic", fontWeight: "bold" })
 		new ECSA.Builder(scene)
 			.relativePos(0.5, 0.5)
 			.anchor(0.5, 0.5)
