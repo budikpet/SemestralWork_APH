@@ -72,7 +72,7 @@ abstract class MovementComponent extends DynamicsComponent {
 		this.dynamics.acceleration = this.dynamics.acceleration.add(repulsiveForce.multiply(10))
 	}
 
-	// Returns true if the ship doesn't move
+	// Returns true if the object doesn't move
 	standsStill(): boolean {
 		return this.dynamics.velocity.magnitude() === 0
 	}

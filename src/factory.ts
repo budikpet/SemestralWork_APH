@@ -71,13 +71,13 @@ export class Factory {
 		let outerPartSize = WALLS_SIZE/5
 
 		// Create walls
-		let wallHorizontal = new ECSA.Graphics(Names.WALL)
-		wallHorizontal.beginFill(outerWallColor)
+		let wallHorizontalRect = new ECSA.Graphics(Names.WALL)
+		wallHorizontalRect.beginFill(outerWallColor)
 			.drawRect(0, 0, WIDTH, WALLS_SIZE)
 			.endFill()
 
-		let wallVertical = new ECSA.Graphics(Names.WALL)
-		wallVertical.beginFill(outerWallColor)
+		let wallVerticalRect = new ECSA.Graphics(Names.WALL)
+		wallVerticalRect.beginFill(outerWallColor)
 			.drawRect(0, 0, WALLS_SIZE, HEIGHT)
 			.endFill()
 
@@ -87,19 +87,19 @@ export class Factory {
 		let wallRight = new ECSA.Container(Names.WALL)
 		gameModel.walls = [wallTop, wallBottom, wallLeft, wallRight]
 
-		wallTop.addChild(wallHorizontal.clone())
+		wallTop.addChild(wallHorizontalRect.clone())
 		wallTop.assignAttribute(Attributes.WALL_REPULSIVE_FORCE, new ECSA.Vector(0, 1))
 		wallTop.assignAttribute(Attributes.WALL_ROTATION, 0)
 
-		wallBottom.addChild(wallHorizontal.clone())
+		wallBottom.addChild(wallHorizontalRect.clone())
 		wallBottom.assignAttribute(Attributes.WALL_REPULSIVE_FORCE, new ECSA.Vector(0, -1))
 		wallBottom.assignAttribute(Attributes.WALL_ROTATION, Math.PI)
 
-		wallLeft.addChild(wallVertical.clone())
+		wallLeft.addChild(wallVerticalRect.clone())
 		wallLeft.assignAttribute(Attributes.WALL_REPULSIVE_FORCE, new ECSA.Vector(1, 0))
 		wallLeft.assignAttribute(Attributes.WALL_ROTATION, 3*Math.PI/2)
 
-		wallRight.addChild(wallVertical.clone())
+		wallRight.addChild(wallVerticalRect.clone())
 		wallRight.assignAttribute(Attributes.WALL_REPULSIVE_FORCE, new ECSA.Vector(-1, 0))
 		wallRight.assignAttribute(Attributes.WALL_ROTATION, Math.PI/2)
 

@@ -3,7 +3,6 @@ import { Factory } from './factory';
 import { WIDTH, HEIGHT, Assets } from './constants';
 import { GameModel } from './game_model';
 
-// TODO rename your game
 class SpaceShooter {
 	engine: ECSA.GameLoop;
 
