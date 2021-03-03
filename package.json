@@ -9,7 +9,7 @@
 		"clean_materials": "node scripts/clean-materials.js"
 	},
 	"devDependencies": {
-		"pug": "2.0.4",
+		"pug": "3.0.1",
 		"sass": "1.23.0",
 		"tslint": "5.20.0"
 	},
